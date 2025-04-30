@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('kriterias', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->enum('role', ['administrator', 'anggota', 'koordinator', 'kps', 'kajur', 'kjm']);
+            $table->string('nama_kriteria');
+            $table->text('deskripsi');
             $table->timestamps();
+
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('kriterias');
     }
 };
