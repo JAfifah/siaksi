@@ -34,8 +34,15 @@
                         ],
                         (object) [
                             'icon' => 'fas fa-list',
-                            'name' => 'Jenis Surat',
-                            'link' => '/jenis-surat',
+                            'name' => 'Website Polinema',
+                            'link' => 'https://www.polinema.ac.id',
+                            'external' => true,
+                            'childs' => [],
+                        ],
+                        (object) [
+                            'icon' => 'fas fa-list',
+                            'name' => 'Denah Gedung',
+                            'link' => '/denah',
                             'childs' => [],
                         ],
                         (object) [
@@ -103,7 +110,8 @@
 
                         <li class="nav-item @if ($hasActiveChild) menu-open @endif">
                             <a class="nav-link @if ((!count($menu->childs) && Request::is(trim($menu->link, '/') . '*')) || $hasActiveChild) active @endif"
-                                href="{{ count($menu->childs) ? '#' : $menu->link }}">
+                                href="{{ count($menu->childs) ? '#' : $menu->link }}"
+                                @if(isset($menu->external) && $menu->external) target="_blank" rel="noopener" @endif>                            
                                 <i class="nav-icon {{ $menu->icon }}"></i>
                                 <p>{{ $menu->name }}</p>
                                 @if (count($menu->childs))

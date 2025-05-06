@@ -75,3 +75,8 @@ Route::get('/beranda/tujuan', function () {
 Route::get('/beranda/sasaran', function () {
     return view('beranda.sasaran');
 })->name('beranda.sasaran');
+
+Route::get('/denah', function () {
+    return view('denah');
+})->name('denah');
+
