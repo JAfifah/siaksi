@@ -63,3 +63,15 @@ Route::middleware('auth')->group(function () {
 Route::get('/beranda/visi', function () {
     return view('beranda.visi');
 })->name('beranda.visi');
+
+Route::get('/beranda/misi', function () {
+    return view('beranda.misi');
+})->name('beranda.misi');
+
+Route::get('/beranda/tujuan', function () {
+    return view('beranda.tujuan');
+})->name('beranda.tujuan');
+
+Route::get('/beranda/sasaran', function () {
+    return view('beranda.sasaran');
+})->name('beranda.sasaran');
