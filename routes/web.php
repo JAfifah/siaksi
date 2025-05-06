@@ -59,3 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil-akun', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profil-akun', [ProfileController::class, 'update'])->name('profile.update');
 });
+
+Route::get('/beranda/visi', function () {
+    return view('beranda.visi');
+})->name('beranda.visi');

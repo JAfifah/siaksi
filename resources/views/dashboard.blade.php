@@ -5,15 +5,13 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Dashboard</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol>
-                </div><!-- /.col -->
+                <div class="col-12 text-center">
+                    <h2 class="display-3 font-weight-bold">Selamat Datang</h2>
+                    <h2 class="display-5 font-weight-bold">Di Akreditasi D4 Sistem Informasi Bisnis Jurusan Teknologi Informasi<br>
+                        Politeknik Negeri Malang</h2>
+
+                </div>
+                <!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
@@ -26,14 +24,16 @@
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>50</h3>
+                    <h3>VISI</h3>
 
-                    <p>Surat Masuk</p>
+                    <p>D4 SIB</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('beranda.visi') }}" class="small-box-footer">
+                    More info <i class="fas fa-arrow-circle-right"></i>
+                </a>                
             </div>
         </div>
         <!-- ./col -->
@@ -41,9 +41,9 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>100</h3>
+                    <h3>MISI</h3>
 
-                    <p>Surat Keluar</p>
+                    <p>D4 SIB</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
@@ -56,9 +56,9 @@
             <!-- small box -->
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>5</h3>
+                    <h3>TUJUAN</h3>
 
-                    <p>Jenis Surat</p>
+                    <p>D4 SIB</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-document-text"></i>
@@ -71,9 +71,9 @@
             <!-- small box -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>3</h3>
+                    <h3>SASARAN</h3>
 
-                    <p>Pengguna Sistem</p>
+                    <p>D4 SIB</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person"></i>
