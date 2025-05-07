@@ -15,8 +15,8 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         $user = [
-            'name' => 'Atmin lur',
-            'email' => 'admin@simsurat.com',
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('admin123'),
             'is_superuser' => true,
             'is_active' => true,

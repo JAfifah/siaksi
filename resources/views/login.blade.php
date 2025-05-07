@@ -24,7 +24,7 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <h1><b>Laravel Boilerplate</h1>
+                <h1><b>Sistem Informasi Akreditasi</h1>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Login untuk memulai</p>
