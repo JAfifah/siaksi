@@ -7,7 +7,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\DocumentInController;
 use App\Http\Controllers\DocumentOutController;
+use App\Http\Controllers\KriteriaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KomentarController;
+use App\Http\Controllers\DokumenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,4 +82,15 @@ Route::get('/beranda/sasaran', function () {
 Route::get('/denah', function () {
     return view('denah');
 })->name('denah');
+
+Route::get('/kriteria1', [KriteriaController::class, 'index'])->name('kriteria.index');
+
+Route::post('/komentar', [KomentarController::class, 'store'])->name('komentar.store');
+
+Route::get('/kriteria/upload', [KriteriaController::class, 'upload'])->name('dokumen.upload');
+Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kriteria.store'); // Ubah nama agar unik
+Route::get('/kriteria/upload', [KriteriaController::class, 'upload'])->name('dokumen.upload');
+
+Route::get('/upload', [DokumenController::class, 'create'])->name('dokumen.create');
+Route::post('/upload', [DokumenController::class, 'store'])->name('dokumen.store');
 
