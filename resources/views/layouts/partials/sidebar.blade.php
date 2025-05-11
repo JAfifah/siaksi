@@ -54,11 +54,11 @@
                             'childs' => [
                                 (object) [
                                     'name' => 'Kriteria 1',
-                                    'link' => '#',
+                                    'link' => '/kriteria1',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 2',
-                                    'link' => '#',
+                                    'link' => '/kriteria2',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 3',

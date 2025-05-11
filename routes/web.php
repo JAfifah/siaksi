@@ -84,6 +84,7 @@ Route::get('/denah', function () {
 })->name('denah');
 
 Route::get('/kriteria1', [KriteriaController::class, 'index'])->name('kriteria.index');
+Route::get('/kriteria2', [KriteriaController::class, 'index'])->name('kriteria.index');
 
 Route::post('/komentar', [KomentarController::class, 'store'])->name('komentar.store');
 

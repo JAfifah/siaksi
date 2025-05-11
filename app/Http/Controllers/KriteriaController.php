@@ -19,6 +19,7 @@ class KriteriaController extends Controller
         $komentars = Komentar::with('user')->get()->groupBy('table');
 
         return view('kriteria.kriteria1', compact('kriterias'));
+        return view('kriteria.kriteria2', compact('kriterias'));
         return view('kriteria.kriteria', compact('kriterias', 'komentars'));
     }
 
