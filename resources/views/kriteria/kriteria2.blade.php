@@ -4,11 +4,8 @@
 <div class="container">
     <h1 class="mb-4">Data Kriteria 1</h1>
 
-<<<<<<< HEAD
-=======
     @foreach ($kriterias as $table => $items)
     <h2 class="mt-4">Tabel: {{ $table }}</h2>
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
     <table class="table table-bordered kriteriaTable">
         <thead>
             <tr>
@@ -18,28 +15,14 @@
             </tr>
         </thead>
         <tbody>
-<<<<<<< HEAD
-            @foreach ($kriterias as $kriteria)
-=======
             @foreach ($items as $kriteria)
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $kriteria->nama }}</td>
                 <td>
-<<<<<<< HEAD
-                    @if ($kriteria->dokumen)
-                        <a href="{{ route('kriteria.lihat', $kriteria->id) }}" class="btn btn-info btn-sm">Lihat</a>
-                        <a href="{{ route('dokumen.validasi', $kriteria->id) }}" class="btn btn-success btn-sm">Validasi</a>
-                    @else
-                        <span class="text-muted">Belum ada dokumen</span>
-                    @endif
-                    <a href="{{ route('dokumen.upload', $kriteria->id) }}" class="btn btn-primary btn-sm">Upload</a>
-=======
                     <a href="" class="btn btn-info btn-sm">Lihat</a>
                     <a href="{{ route('dokumen.upload') }}" class="btn btn-primary btn-sm">Upload</a>
                     <a href="" class="btn btn-success btn-sm">Validasi</a>
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
                 </td>
             </tr>
             @endforeach
@@ -47,17 +30,10 @@
     </table>
 
     {{-- Komentar --}}
-<<<<<<< HEAD
-    <div class="mt-5">
-        <h5>Komentar</h5>
-        <ul class="list-group mb-3">
-            @forelse ($komentars as $komentar)
-=======
     <div class="mt-4">
         <h5>Komentar</h5>
         <ul class="list-group mb-3">
             @forelse ($komentars[$table] ?? [] as $komentar)
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
                 <li class="list-group-item">
                     <strong>{{ $komentar->user->name }}</strong>: {{ $komentar->isi }}
                 </li>
@@ -67,25 +43,6 @@
         </ul>
 
         <form method="POST" action="{{ route('komentar.store') }}">
-<<<<<<< HEAD
-    @csrf
-
-    @if ($dokumen->isNotEmpty())
-        <!-- Mengambil dokumen pertama dari koleksi -->
-        <input type="hidden" name="dokumen_id" value="{{ $dokumen->first()->id }}"> <!-- Dokumen pertama -->
-    @else
-        <input type="hidden" name="dokumen_id" value="null"> <!-- Atau menampilkan error jika tidak ada dokumen -->
-    @endif
-
-    <div class="mb-2">
-        <textarea name="isi" class="form-control" placeholder="Tulis komentar..."></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary btn-sm">Kirim Komentar</button>
-</form>
-
-    </div>
-=======
             @csrf
             <input type="hidden" name="table" value="{{ $table }}">
             <div class="mb-2">
@@ -96,7 +53,6 @@
     </div>
     <hr>
     @endforeach
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
 </div>
 
 @push('scripts')
@@ -108,8 +64,6 @@
         $('.kriteriaTable').DataTable();
     });
 </script>
-<<<<<<< HEAD
-=======
 
 @forelse ($komentars[$table] ?? [] as $komentar)
     <li class="list-group-item">
@@ -119,6 +73,5 @@
     <li class="list-group-item text-muted">Belum ada komentar.</li>
 @endforelse
 
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
 @endpush
 @endsection
