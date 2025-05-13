@@ -16,7 +16,7 @@ class DokumenController extends Controller
         return view('kriteria.upload', compact('kriterias'));
     }
 
-    public function store(Request $request,)
+    public function store(Request $request)
     {
         $request->validate([
             'judul' => 'required|string|max:255',
@@ -25,14 +25,14 @@ class DokumenController extends Controller
             'kriteria_id' => 'required|exists:kriteria,id',
         ]);
 
+        $path = $request->file('file')->store('dokumen', 'public');
+
         $uploadedFile = $request->file('file');
         $filename = time() . '_' . $uploadedFile->getClientOriginalName();
         $uploadedFile->move(public_path('dokumen'), $filename);
         $filePath = $filename;
 
-
-
-
+        // Menyimpan dokumen ke database
         Dokumen::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
@@ -52,10 +52,7 @@ class DokumenController extends Controller
 
     public function validasi($id)
     {
-        // Ambil data dokumen berdasarkan ID
-        $dokumen = Dokumen::with('kriteria')->find($id);
-
-        // Tampilkan view walau dokumen null (biar tidak 404)
+        $dokumen = Dokumen::with('kriteria')->find($id); // Pastikan relasi 'kriteria' ada
         return view('kriteria.validasi', compact('dokumen'));
     }
 
@@ -65,14 +62,32 @@ class DokumenController extends Controller
             'komentar' => 'required|string|max:1000',
         ]);
 
-        $dokumen = Dokumen::findOrFail($id);
+        $dokumen = Dokumen::find($id);
 
-        Komentar::create([
-            'dokumen_id' => $dokumen->id,
-            'user_id' => auth()->id(),
-            'isi' => $request->komentar,
-        ]);
+        if ($dokumen) {
+            // Menandai dokumen dengan status 'ditolak' atau apapun sesuai kebutuhan
+            $dokumen->status = 'ditolak'; // Jika ada field status
+            $dokumen->save();
 
-        return redirect()->route('dokumen.validasi', $id)->with('error', 'Dokumen telah dikembalikan dengan komentar.');
+            // Simpan komentar jika ada relasi komentar
+            $dokumen->komentars()->create([
+                'user_id' => auth()->id(),
+                'isi' => $request->komentar,
+            ]);
+
+            return redirect()->route('dokumen.validasi', $id)->with('success', 'Dokumen berhasil dikembalikan dengan komentar.');
+        }
+
+        return redirect()->back()->with('error', 'Dokumen tidak ditemukan.');
     }
+
+    public function setujui($id)
+    {
+        $dokumen = Dokumen::findOrFail($id);
+        $dokumen->status = 'disetujui';
+        $dokumen->save();
+
+        return redirect()->back()->with('success', 'Dokumen berhasil disetujui.');
+    }
+
 }

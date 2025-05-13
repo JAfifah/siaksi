@@ -27,11 +27,7 @@
                     {{-- Form upload dokumen --}}
                     <form action="{{ route('dokumen.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-<<<<<<< HEAD
                         <input type="hidden" name="kriteria_id" value="{{ $id }}">
-
-=======
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
 
                         <div class="mb-3">
                             <label for="judul" class="form-label">Judul Dokumen</label>
@@ -42,10 +38,6 @@
                             <label for="deskripsi" class="form-label">Deskripsi Dokumen</label>
                             <textarea name="deskripsi" class="form-control" rows="4" required></textarea>
                         </div>
-<<<<<<< HEAD
-                        
-=======
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
 
                         <div class="mb-3">
                             <label for="file" class="form-label d-block">Upload File</label>
@@ -59,11 +51,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-<<<<<<< HEAD
                             <a href="/kriteria1" class="btn btn-secondary">Kembali</a>
-=======
-                            <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
                             <button type="submit" class="btn btn-success">Upload</button>
                         </div>
                     </form>

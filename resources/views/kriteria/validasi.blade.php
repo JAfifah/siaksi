@@ -16,20 +16,34 @@
 
                 @if ($dokumen->file_path)
                     <p><strong>File:</strong> 
-                        <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
+                        <a href="{{ asset('dokumen/' . $dokumen->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
                     </p>
                 @else
                     <p class="text-danger">File tidak tersedia.</p>
                 @endif
 
-                <form action="{{ route('dokumen.kembalikan', $dokumen->id) }}" method="POST" class="mt-3">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="komentar" class="form-label">Komentar Pengembalian</label>
-                        <textarea name="komentar" id="komentar" class="form-control" rows="3" placeholder="Tulis alasan pengembalian..."></textarea>
+                {{-- Warning jika sudah disetujui --}}
+                @if ($dokumen->status === 'disetujui')
+                    <div class="alert alert-success">
+                        Dokumen ini telah disetujui.
                     </div>
-                    <button type="submit" class="btn btn-danger">Kembalikan Dokumen</button>
-                </form>
+                @else
+                    {{-- Tombol Kembalikan --}}
+                    <form action="{{ route('dokumen.kembalikan', $dokumen->id) }}" method="POST" class="mt-3">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="komentar" class="form-label">Komentar Pengembalian</label>
+                            <textarea name="komentar" id="komentar" class="form-control" rows="3" placeholder="Tulis alasan pengembalian..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Kembalikan Dokumen</button>
+                    </form>
+
+                    {{-- Tombol Setujui --}}
+                    <form action="{{ route('dokumen.setujui', $dokumen->id) }}" method="POST" class="mt-3">
+                        @csrf
+                        <button type="submit" class="btn btn-success">Setujui Dokumen</button>
+                    </form>
+                @endif
             </div>
         </div>
     @else

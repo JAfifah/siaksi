@@ -83,3 +83,8 @@ Route::get('/dokumen/create', [DokumenController::class, 'create']); // Sudah ad
 Route::get('/dokumen/{id}/lihat', [DokumenController::class, 'showDokumen'])->name('dokumen.lihat');
 Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
 Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');
+
+# validasi
+Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');
+Route::post('/dokumen/{id}/kembalikan', [DokumenController::class, 'kembalikan'])->name('dokumen.kembalikan');
+Route::post('/dokumen/{id}/setujui', [DokumenController::class, 'setujui'])->name('dokumen.setujui');

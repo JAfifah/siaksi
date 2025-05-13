@@ -27,5 +27,13 @@ class Dokumen extends Model
         return $this->hasMany(Komentar::class);
     }
 
+    public function validasi($id)
+{
+    $dokumen = Dokumen::with('kriteria')->find($id); // <--- ini penting!
+
+    return view('kriteria.validasi', compact('dokumen'));
+}
+
+
     protected $table = 'dokumen';
 }
