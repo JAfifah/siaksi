@@ -8,14 +8,9 @@ use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\DocumentInController;
 use App\Http\Controllers\DocumentOutController;
 use App\Http\Controllers\KriteriaController;
-<<<<<<< HEAD
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\DokumenController;
-=======
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\KomentarController;
-use App\Http\Controllers\DokumenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +68,7 @@ Route::get('/denah', fn() => view('denah'))->name('denah');
 
 # Kriteria
 Route::get('/kriteria1', [KriteriaController::class, 'index'])->name('kriteria.index');
+Route::get('/kriteria2', [KriteriaController::class, 'index'])->name('kriteria2.index'); // disesuaikan agar unik
 Route::get('/kriteria1/lihat/{id}', [KriteriaController::class, 'lihat'])->name('kriteria.lihat');
 Route::get('/kriteria/upload/{id}', [KriteriaController::class, 'upload'])->name('dokumen.upload');
 Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kriteria.store');
@@ -83,23 +79,7 @@ Route::post('/komentar', [KomentarController::class, 'store'])->name('komentar.s
 # Dokumen (upload & view)
 Route::get('/upload', [DokumenController::class, 'create'])->name('dokumen.create');
 Route::post('/upload', [DokumenController::class, 'store'])->name('dokumen.store');
-Route::get('/dokumen/create', [DokumenController::class, 'create']); // Tidak perlu name ulang
+Route::get('/dokumen/create', [DokumenController::class, 'create']); // Sudah ada named route di atas
 Route::get('/dokumen/{id}/lihat', [DokumenController::class, 'showDokumen'])->name('dokumen.lihat');
 Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
-
-<<<<<<< HEAD
 Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');
-=======
-Route::get('/kriteria1', [KriteriaController::class, 'index'])->name('kriteria.index');
-Route::get('/kriteria2', [KriteriaController::class, 'index'])->name('kriteria.index');
-
-Route::post('/komentar', [KomentarController::class, 'store'])->name('komentar.store');
-
-Route::get('/kriteria/upload', [KriteriaController::class, 'upload'])->name('dokumen.upload');
-Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kriteria.store'); // Ubah nama agar unik
-Route::get('/kriteria/upload', [KriteriaController::class, 'upload'])->name('dokumen.upload');
-
-Route::get('/upload', [DokumenController::class, 'create'])->name('dokumen.create');
-Route::post('/upload', [DokumenController::class, 'store'])->name('dokumen.store');
-
->>>>>>> 2e8eb87c39bff4f296f17a31cb9684ef9f627139
