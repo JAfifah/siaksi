@@ -7,17 +7,15 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\DocumentInController;
 use App\Http\Controllers\DocumentOutController;
+use App\Http\Controllers\KriteriaController;
+use App\Http\Controllers\KomentarController;
+use App\Http\Controllers\DokumenController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 Route::get('/', function () {
@@ -26,18 +24,17 @@ Route::get('/', function () {
 
 # Auth routes
 Route::middleware('guest')->group(function () {
-    Route::get('login', [AuthController::class, 'create'])
-        ->name('login');
+    Route::get('login', [AuthController::class, 'create'])->name('login');
     Route::post('login', [AuthController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {
-    Route::post('logout', [AuthController::class, 'destroy'])
-        ->name('logout');
+    Route::post('logout', [AuthController::class, 'destroy'])->name('logout');
 
     # Dashboard Page
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    # Super Admin only
     Route::middleware('is_super_admin')->group(function () {
         # Manage User Page
         Route::get('/manajemen-akun', [ManageUserController::class, 'index'])->name('users-management.index');
@@ -55,28 +52,34 @@ Route::middleware('auth')->group(function () {
     Route::put('/jenis-surat/{id}', [DocumentTypeController::class, 'update'])->name('doc-types-management.update');
     Route::delete('/jenis-surat/{id}', [DocumentTypeController::class, 'destroy'])->name('doc-types-management.destroy');
 
-    // Profile Page
+    # Profile Page
     Route::get('/profil-akun', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profil-akun', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-Route::get('/beranda/visi', function () {
-    return view('beranda.visi');
-})->name('beranda.visi');
+# Halaman Beranda
+Route::get('/beranda/visi', fn() => view('beranda.visi'))->name('beranda.visi');
+Route::get('/beranda/misi', fn() => view('beranda.misi'))->name('beranda.misi');
+Route::get('/beranda/tujuan', fn() => view('beranda.tujuan'))->name('beranda.tujuan');
+Route::get('/beranda/sasaran', fn() => view('beranda.sasaran'))->name('beranda.sasaran');
 
-Route::get('/beranda/misi', function () {
-    return view('beranda.misi');
-})->name('beranda.misi');
+# Halaman Denah
+Route::get('/denah', fn() => view('denah'))->name('denah');
 
-Route::get('/beranda/tujuan', function () {
-    return view('beranda.tujuan');
-})->name('beranda.tujuan');
+# Kriteria
+Route::get('/kriteria1', [KriteriaController::class, 'index'])->name('kriteria.index');
+Route::get('/kriteria1/lihat/{id}', [KriteriaController::class, 'lihat'])->name('kriteria.lihat');
+Route::get('/kriteria/upload/{id}', [KriteriaController::class, 'upload'])->name('dokumen.upload');
+Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kriteria.store');
 
-Route::get('/beranda/sasaran', function () {
-    return view('beranda.sasaran');
-})->name('beranda.sasaran');
+# Komentar
+Route::post('/komentar', [KomentarController::class, 'store'])->name('komentar.store');
 
-Route::get('/denah', function () {
-    return view('denah');
-})->name('denah');
+# Dokumen (upload & view)
+Route::get('/upload', [DokumenController::class, 'create'])->name('dokumen.create');
+Route::post('/upload', [DokumenController::class, 'store'])->name('dokumen.store');
+Route::get('/dokumen/create', [DokumenController::class, 'create']); // Tidak perlu name ulang
+Route::get('/dokumen/{id}/lihat', [DokumenController::class, 'showDokumen'])->name('dokumen.lihat');
+Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
 
+Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');

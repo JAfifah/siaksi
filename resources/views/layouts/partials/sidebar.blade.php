@@ -15,7 +15,9 @@
                     <img src="{{ asset('dist/img/avatar.png') }}" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                    <a href="#" class="d-block">
+                        {{ Auth::check() ? Auth::user()->name : 'Guest' }}
+                    </a>
                 </div>
             </div>
 
@@ -54,7 +56,7 @@
                             'childs' => [
                                 (object) [
                                     'name' => 'Kriteria 1',
-                                    'link' => '#',
+                                    'link' => '/kriteria1',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 2',

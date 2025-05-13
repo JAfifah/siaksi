@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->enum('role', ['administrator', 'anggota', 'koordinator', 'kps', 'kajur', 'kjm', 'direktur']);
             $table->boolean('is_superuser')->default(false);
             $table->boolean('is_active')->default(true);
             $table->rememberToken();
