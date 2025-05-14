@@ -5,7 +5,7 @@
     <h1 class="mb-4">Data Kriteria 1</h1>
 
     @foreach ($kriterias as $table => $items)
-    <h2 class="mt-4">Tabel: {{ $table }}</h2>
+    <h2 class="mt-4">Penetapan {{ $table }}</h2>
     <table class="table table-bordered kriteriaTable">
         <thead>
             <tr>
@@ -15,26 +15,380 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($items as $kriteria)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $kriteria->nama }}</td>
-                    <td>
-                        @php
-                            $dokumenKriteria = $dokumen->where('kriteria_id', $kriteria->id)->first();
-                        @endphp
+            @php $item1 = $items[0] ?? null; @endphp
+            @php $item2 = $items[1] ?? null; @endphp
+            @php $item3 = $items[2] ?? null; @endphp
 
-                        @if ($dokumenKriteria)
-                            <a href="{{ route('kriteria.lihat', $kriteria->id) }}" class="btn btn-info btn-sm">Lihat</a>
-                            <a href="{{ route('dokumen.validasi', $kriteria->id) }}" class="btn btn-success btn-sm">Validasi</a>
-                        @else
-                            <span class="text-muted">Belum ada dokumen</span>
-                        @endif
+            #kolom1
+            @if ($item1)
+            <tr>
+                <td>1</td>
+                <td>Kriteria Penilaian Dosen</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item1->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item1->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item1->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item1->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
 
-                        <a href="{{ route('dokumen.upload', $kriteria->id) }}" class="btn btn-primary btn-sm">Upload</a>
-                    </td>
-                </tr>
-            @endforeach
+            #Kolom2
+            @if ($item2)
+            <tr>
+                <td>2</td>
+                <td>Kriteria Kinerja Mahasiswa</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item2->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item2->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item2->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item2->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item3)
+            <tr>
+                <td>3</td>
+                <td>Kriteria Sarana dan Prasarana</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item3->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item3->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item3->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item3->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item1)
+            <tr>
+                <td>4</td>
+                <td>Kriteria Penilaian Dosen</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item1->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item1->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item1->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item1->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+
+        </tbody>
+    </table>
+
+
+    
+    @endforeach
+
+    @foreach ($kriterias as $table => $items)
+    <h2 class="mt-4">Pelaksanaan {{ $table }}</h2>
+    <table class="table table-bordered kriteriaTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Kriteria</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $item1 = $items[0] ?? null; @endphp
+            @php $item2 = $items[1] ?? null; @endphp
+            @php $item3 = $items[2] ?? null; @endphp
+
+            @if ($item1)
+            <tr>
+                <td>1</td>
+                <td>Kriteria Penilaian Dosen</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item1->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item1->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item1->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item1->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item2)
+            <tr>
+                <td>2</td>
+                <td>Kriteria Kinerja Mahasiswa</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item2->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item2->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item2->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item2->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item3)
+            <tr>
+                <td>3</td>
+                <td>Kriteria Sarana dan Prasarana</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item3->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item3->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item3->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item3->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item3)
+            <tr>
+                <td>4</td>
+                <td>Kriteria Sarana dan Prasarana</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item3->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item3->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item3->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item3->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+        </tbody>
+    </table>
+
+     @endforeach
+
+    @foreach ($kriterias as $table => $items)
+    <h2 class="mt-4">Evaluasi {{ $table }}</h2>
+    <table class="table table-bordered kriteriaTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Kriteria</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $item1 = $items[0] ?? null; @endphp
+            @php $item2 = $items[1] ?? null; @endphp
+            @php $item3 = $items[2] ?? null; @endphp
+
+            @if ($item1)
+            <tr>
+                <td>1</td>
+                <td>Kriteria Penilaian Dosen</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item1->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item1->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item1->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item1->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item2)
+            <tr>
+                <td>2</td>
+                <td>Kriteria Kinerja Mahasiswa</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item2->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item2->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item2->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item2->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item3)
+            <tr>
+                <td>3</td>
+                <td>Kriteria Sarana dan Prasarana</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item3->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item3->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item3->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item3->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+        </tbody>
+    </table>
+
+     @endforeach
+
+    @foreach ($kriterias as $table => $items)
+    <h2 class="mt-4">Pengendalian {{ $table }}</h2>
+    <table class="table table-bordered kriteriaTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Kriteria</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $item1 = $items[0] ?? null; @endphp
+            @php $item2 = $items[1] ?? null; @endphp
+            @php $item3 = $items[2] ?? null; @endphp
+
+            @if ($item1)
+            <tr>
+                <td>1</td>
+                <td>Kriteria Penilaian Dosen</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item1->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item1->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item1->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item1->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item2)
+            <tr>
+                <td>2</td>
+                <td>Kriteria Kinerja Mahasiswa</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item2->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item2->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item2->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item2->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item3)
+            <tr>
+                <td>3</td>
+                <td>Kriteria Sarana dan Prasarana</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item3->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item3->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item3->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item3->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+        </tbody>
+    </table>
+
+     @endforeach
+
+    @foreach ($kriterias as $table => $items)
+    <h2 class="mt-4">Peningkatan {{ $table }}</h2>
+    <table class="table table-bordered kriteriaTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Kriteria</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $item1 = $items[0] ?? null; @endphp
+            @php $item2 = $items[1] ?? null; @endphp
+            @php $item3 = $items[2] ?? null; @endphp
+
+            @if ($item1)
+            <tr>
+                <td>1</td>
+                <td>Kriteria Penilaian Dosen</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item1->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item1->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item1->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item1->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item2)
+            <tr>
+                <td>2</td>
+                <td>Kriteria Kinerja Mahasiswa</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item2->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item2->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item2->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item2->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
+
+            @if ($item3)
+            <tr>
+                <td>3</td>
+                <td>Kriteria Sarana dan Prasarana</td>
+                <td>
+                    @php $dokumenKriteria = collect($dokumen)->where('kriteria_id', $item3->id)->first(); @endphp
+                    @if ($dokumenKriteria)
+                        <a href="{{ route('kriteria.lihat', $item3->id) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('dokumen.validasi', $item3->id) }}" class="btn btn-success btn-sm">Validasi</a>
+                    @else
+                        <span class="text-muted">Belum ada dokumen</span>
+                    @endif
+                    <a href="{{ route('dokumen.upload', $item3->id) }}" class="btn btn-primary btn-sm">Upload</a>
+                </td>
+            </tr>
+            @endif
         </tbody>
     </table>
 
@@ -58,13 +412,9 @@
                 $dokumenPertama = $items->first()->dokumen ?? null;
             @endphp
 
-            @if ($dokumenPertama)
-                <input type="hidden" name="dokumen_id" value="{{ $dokumenPertama->id }}">
-            @else
-                <input type="hidden" name="dokumen_id" value="">
-            @endif
-
+            <input type="hidden" name="dokumen_id" value="{{ $dokumenPertama->id ?? '' }}">
             <input type="hidden" name="table" value="{{ $table }}">
+
             <div class="mb-2">
                 <textarea name="isi" class="form-control" placeholder="Tulis komentar..."></textarea>
             </div>
@@ -73,6 +423,7 @@
     </div>
     <hr>
     @endforeach
+
 </div>
 
 @push('scripts')
@@ -85,4 +436,5 @@
     });
 </script>
 @endpush
+
 @endsection
