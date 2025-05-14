@@ -64,35 +64,31 @@
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 3',
-                                    'link' => '#',
+                                    'link' => '/kriteria3',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 4',
-                                    'link' => '#',
+                                    'link' => '/kriteria4',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 5',
-                                    'link' => '#',
+                                    'link' => '/kriteria5',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 6',
-                                    'link' => '#',
+                                    'link' => '/kriteria6',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 7',
-                                    'link' => '#',
+                                    'link' => '/kriteria7',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 8',
-                                    'link' => '#',
+                                    'link' => '/kriteria8',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 9',
-                                    'link' => '#',
-                                ],
-                                (object) [
-                                    'name' => 'Suplemen',
-                                    'link' => '#',
+                                    'link' => '/kriteria9',
                                 ],
                             ],
                         ],
