@@ -14,11 +14,16 @@ class KriteriaSeeder extends Seeder
      */
     public function run()
     {
-        // Menambahkan data kriteria ke dalam tabel 'kriteria'
-        Kriteria::create(['nama' => 'Kriteria 1']);
-        Kriteria::create(['nama' => 'Kriteria 2']);
-        Kriteria::create(['nama' => 'Kriteria 3']);
-        Kriteria::create(['nama' => 'Kriteria 4']);
-        Kriteria::create(['nama' => 'Kriteria 5']);
+        $kriteria = [
+            [
+                'nama' => 'Statuta Polinema',
+                'tahap' => 'penetapan',
+                'nomor' => 1
+            ]
+
+        ];
+
+        foreach ($kriteria as $k) {
+            Kriteria::create($k);
     }
 }

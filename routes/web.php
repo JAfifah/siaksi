@@ -67,16 +67,8 @@ Route::get('/beranda/sasaran', fn() => view('beranda.sasaran'))->name('beranda.s
 Route::get('/denah', fn() => view('denah'))->name('denah');
 
 # Kriteria
-Route::get('/kriteria1', [KriteriaController::class, 'index'])->name('kriteria.index');
-Route::get('/kriteria2', [KriteriaController::class, 'index'])->name('kriteria2.index');
-Route::get('/kriteria3', [KriteriaController::class, 'index'])->name('kriteria3.index');
-Route::get('/kriteria4', [KriteriaController::class, 'index'])->name('kriteria4.index');
-Route::get('/kriteria5', [KriteriaController::class, 'index'])->name('kriteria5.index');
-Route::get('/kriteria6', [KriteriaController::class, 'index'])->name('kriteria6.index');
-Route::get('/kriteria7', [KriteriaController::class, 'index'])->name('kriteria7.index');
-Route::get('/kriteria8', [KriteriaController::class, 'index'])->name('kriteria8.index');
-Route::get('/kriteria9', [KriteriaController::class, 'index'])->name('kriteria9.index');
-Route::get('/kriteria1/lihat/{id}', [KriteriaController::class, 'lihat'])->name('kriteria.lihat');
+Route::get('/kriteria/{nomor}', [KriteriaController::class, 'show'])->name('kriteria.show');
+Route::get('/kriteria/{id}/lihat', [KriteriaController::class, 'lihat'])->name('kriteria.lihat');
 Route::get('/kriteria/upload/{id}', [KriteriaController::class, 'upload'])->name('dokumen.upload');
 Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kriteria.store');
 
