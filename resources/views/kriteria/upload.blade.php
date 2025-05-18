@@ -41,17 +41,25 @@
 
                         <div class="mb-3">
                             <label for="file" class="form-label d-block">Upload File</label>
-                            
-                            <!-- Tombol kustom untuk input file -->
                             <label class="btn btn-outline-primary">
                                 Pilih File
-                                <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.jpg,.png" hidden required>
+                                <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.jpg,.png" hidden>
                             </label>
-                            <div class="form-text mt-1">Format diperbolehkan: pdf, doc, docx, jpg, png. Maksimal 2MB.</div>
+                            <div class="form-text mt-1">Format: pdf, doc, docx, jpg, png. Maksimal 2MB.</div>
+                        </div>
+
+                        <div class="text-center mb-2">
+                            <strong>— ATAU —</strong>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="link" class="form-label">Masukkan Link Dokumen (Opsional)</label>
+                            <input type="url" name="link" class="form-control" placeholder="https://contoh.com/dokumen">
+                            <div class="form-text">Isi salah satu: file *atau* link.</div>
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="/kriteria1" class="btn btn-secondary">Kembali</a>
+                            <button type="button" class="btn btn-secondary" onclick="history.back()">Kembali</button>
                             <button type="submit" class="btn btn-success">Upload</button>
                         </div>
                     </form>
@@ -64,9 +72,8 @@
 </div>
 
 @if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
         {{ session('success') }}
     </div>
 @endif
-
 @endsection

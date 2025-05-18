@@ -16,6 +16,7 @@ class Komentar extends Model
         'komentar',   // Isi komentar
         'table',      // Nama tabel yang dikomentari (dari versi lain)
         'isi',        // Isi komentar (alternatif atau tambahan)
+        'page',       // Halaman atau nomor kriteria
     ];
 
     // Relasi ke tabel dokumen (jika diperlukan)

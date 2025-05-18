@@ -10,26 +10,21 @@ use App\Models\Kriteria;
 
 class KriteriaController extends Controller
 {
-    public function index()
+    public function show($nomor)
     {
-        $kriterias = Kriteria::all()->groupBy('table');
-
-        $komentars = Komentar::with('user')->get()->groupBy('table');
-
+        $kriterias = Kriteria::where('nomor', $nomor)->get();
         $dokumen = Dokumen::all();
+        $komentars = Komentar::where('page', $nomor)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return view('kriteria.kriteria1', [
-            'kriterias' => $kriterias,
-            'komentars' => $komentars,
-            'dokumen' => $dokumen,
-        ]);
+        return view('kriteria.kriteria', compact('kriterias', 'dokumen', 'komentars', 'nomor'));
     }
 
     public function lihat($id)
     {
         $kriterias = Kriteria::find($id);
-
-        // Ambil semua dokumen berdasarkan kriteria_id
         $documents = Dokumen::where('kriteria_id', $id)->with('kriteria')->get();
 
         return view('kriteria.lihat', [

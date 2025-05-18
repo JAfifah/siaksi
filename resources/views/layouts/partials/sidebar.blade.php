@@ -1,4 +1,4 @@
-    <!-- Main Sidebar Container -->
+<!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-navy elevation-4">
         <!-- Brand Logo -->
         <a href="index3.html" class="brand-link">
@@ -56,39 +56,39 @@
                             'childs' => [
                                 (object) [
                                     'name' => 'Kriteria 1',
-                                    'link' => '/kriteria1',
+                                    'link' => '/kriteria/1',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 2',
-                                    'link' => '/kriteria2',
+                                    'link' => '/kriteria/2',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 3',
-                                    'link' => '/kriteria3',
+                                    'link' => '/kriteria/3',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 4',
-                                    'link' => '/kriteria4',
+                                    'link' => '/kriteria/4',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 5',
-                                    'link' => '/kriteria5',
+                                    'link' => '/kriteria/5',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 6',
-                                    'link' => '/kriteria6',
+                                    'link' => '/kriteria/6',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 7',
-                                    'link' => '/kriteria7',
+                                    'link' => '/kriteria/7',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 8',
-                                    'link' => '/kriteria8',
+                                    'link' => '/kriteria/8',
                                 ],
                                 (object) [
                                     'name' => 'Kriteria 9',
-                                    'link' => '/kriteria9',
+                                    'link' => '/kriteria/9',
                                 ],
                             ],
                         ],

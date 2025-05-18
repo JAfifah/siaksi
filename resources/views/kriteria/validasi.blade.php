@@ -16,7 +16,11 @@
 
                 @if ($dokumen->file_path)
                     <p><strong>File:</strong> 
-                        <a href="{{ asset('dokumen/' . $dokumen->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
+                        @if (filter_var($dokumen->file_path, FILTER_VALIDATE_URL))
+                            <a href="{{ $dokumen->file_path }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat Link</a>
+                        @else
+                            <a href="{{ asset('dokumen/' . $dokumen->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
+                        @endif
                     </p>
                 @else
                     <p class="text-danger">File tidak tersedia.</p>
