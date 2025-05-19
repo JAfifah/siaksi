@@ -40,7 +40,8 @@
                                            class="btn btn-info btn-sm">
                                            <i class="fas fa-eye"></i> Lihat
                                         </a>
-                                        <a href="{{ route('dokumen.validasi', $kriteria->id) }}" 
+                                        {{-- Perbaikan di sini: gunakan dokumenKriteria->id --}}
+                                        <a href="{{ route('dokumen.validasi', $dokumenKriteria->id) }}" 
                                            class="btn btn-success btn-sm">
                                            <i class="fas fa-check"></i> Validasi
                                         </a>
@@ -85,14 +86,21 @@
                 @endforelse
             </ul>
 
-            <form method="POST" action="{{ route('komentar.store') }}">
-                @csrf
-                <input type="hidden" name="page" value="{{ $nomor }}">
-                <div class="form-group">
-                    <textarea name="isi" class="form-control" rows="3" placeholder="Tulis komentar..." required></textarea>
+            @if (isset($dokumenKriteria) && $dokumenKriteria)
+                <form method="POST" action="{{ route('komentar.store') }}">
+                    @csrf
+                    <input type="hidden" name="page" value="{{ $nomor }}">
+                    <input type="hidden" name="dokumen_id" value="{{ $dokumenKriteria->id }}">
+                    <div class="form-group">
+                        <textarea name="isi" class="form-control" rows="3" placeholder="Tulis komentar..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Kirim Komentar</button>
+                </form>
+            @else
+                <div class="alert alert-warning">
+                    Belum ada dokumen yang bisa dikomentari.
                 </div>
-                <button type="submit" class="btn btn-primary mt-2">Kirim Komentar</button>
-            </form>
+            @endif
         </div>
     </div>
 </div>

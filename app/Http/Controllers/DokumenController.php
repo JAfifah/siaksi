@@ -68,22 +68,30 @@ class DokumenController extends Controller
     }
 
     public function kembalikan(Request $request, $id)
-{
-    $dokumen = Dokumen::findOrFail($id);
+    {
+        $dokumen = Dokumen::findOrFail($id);
 
-    // Validasi komentar (optional)
-    $request->validate([
-        'komentar' => 'nullable|string',
-    ]);
+        // Validasi komentar (optional)
+        $request->validate([
+            'komentar' => 'nullable|string',
+        ]);
 
-    // Logika pengembalian dokumen, misalnya update status dan simpan komentar
-    $dokumen->status = 'dikembalikan';
-    $dokumen->komentar_pengembalian = $request->komentar;
-    $dokumen->save();
+        // Logika pengembalian dokumen, misalnya update status dan simpan komentar
+        $dokumen->status = 'dikembalikan';
+        $dokumen->komentar_pengembalian = $request->komentar;
+        $dokumen->save();
 
-    return redirect()->back()->with('success', 'Dokumen berhasil dikembalikan.');
-}
+        // Simpan komentar juga ke tabel komentar (opsional)
+        if ($request->filled('komentar')) {
+            Komentar::create([
+                'user_id' => Auth::id(),
+                'dokumen_id' => $dokumen->id,
+                'komentar' => $request->komentar,
+            ]);
+        }
 
+        return redirect()->back()->with('success', 'Dokumen berhasil dikembalikan.');
+    }
 
     public function setujui($id)
     {

@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('komentars', function (Blueprint $table) {
-            $table->integer('page')->after('komentar');
+            $table->integer('page')->nullable();
         });
     }
 

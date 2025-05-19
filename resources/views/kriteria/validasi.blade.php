@@ -4,6 +4,13 @@
 <div class="container">
     <h1 class="mb-4">Validasi Dokumen</h1>
 
+    {{-- Tampilkan notifikasi sukses jika ada --}}
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     @if ($dokumen)
         <div class="card">
             <div class="card-header">
@@ -26,10 +33,19 @@
                     <p class="text-danger">File tidak tersedia.</p>
                 @endif
 
-                {{-- Warning jika sudah disetujui --}}
+                {{-- Warning jika sudah disetujui atau dikembalikan --}}
                 @if ($dokumen->status === 'disetujui')
                     <div class="alert alert-success">
                         Dokumen ini telah disetujui.
+                    </div>
+                @elseif ($dokumen->status === 'dikembalikan')
+                    <div class="alert alert-warning">
+                        Dokumen ini telah dikembalikan.
+                        @if($dokumen->komentar_pengembalian)
+                            <hr>
+                            <p><strong>Alasan Pengembalian:</strong></p>
+                            <p>{{ $dokumen->komentar_pengembalian }}</p>
+                        @endif
                     </div>
                 @else
                     {{-- Tombol Kembalikan --}}
