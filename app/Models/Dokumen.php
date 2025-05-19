@@ -24,7 +24,7 @@ class Dokumen extends Model
     
     public function komentars()
     {
-        return $this->hasMany(Komentar::class);
+        return $this->hasMany(Komentar::class, 'dokumen_id', 'id');
     }
 
     public function validasi($id)

@@ -8,21 +8,33 @@ use Illuminate\Support\Facades\Auth;
 
 class KomentarController extends Controller
 {
+    /**
+     * Menyimpan komentar ke dalam database.
+     */
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'dokumen_id' => 'required|exists:dokumen,id',
-        'isi' => 'required|string|max:1000', // Ganti dari 'komentar' menjadi 'isi'
-    ]);
+    {
+        // Validasi input dari form
+        $validated = $request->validate([
+            'dokumen_id' => 'required|exists:dokumen,id',
+            'isi' => 'required|string|max:1000', // Ganti dari 'komentar' menjadi 'isi'
+            'page' => 'nullable|integer', // Untuk melacak asal halaman, opsional
+        ]);
 
-    $komentar = new Komentar();
-    $komentar->dokumen_id = $validated['dokumen_id'];
-    $komentar->user_id = auth()->id(); // Pastikan user sedang login
-    $komentar->isi = $validated['isi']; // Ini sudah benar
-    $komentar->save();
+        // Hanya admin, kajur, kps, dan direktur yang boleh komentar
+        $allowedRoles = ['admin', 'kajur', 'kps', 'direktur'];
+        $user = Auth::user();
 
-    return redirect()->back()->with('success', 'Komentar berhasil dikirim.');
-}
+        if (!in_array($user->role, $allowedRoles)) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk berkomentar.');
+        }
 
+        // Buat komentar baru
+        $komentar = new Komentar();
+        $komentar->dokumen_id = $validated['dokumen_id'];
+        $komentar->user_id = $user->id; // Pastikan user sedang login
+        $komentar->isi = $validated['isi'];
+        $komentar->save();
 
+        return redirect()->back()->with('success', 'Komentar berhasil dikirim.');
+    }
 }

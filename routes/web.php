@@ -74,6 +74,8 @@ Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kri
 
 # Komentar
 Route::post('/komentar', [KomentarController::class, 'store'])->name('komentar.store');
+Route::post('/komentar/store', [KomentarController::class, 'store'])->name('komentar.store');
+Route::post('/komentar/store', [KomentarController::class, 'store'])->name('komentar.store');
 
 # Dokumen (upload & view)
 Route::get('/upload', [DokumenController::class, 'create'])->name('dokumen.create');

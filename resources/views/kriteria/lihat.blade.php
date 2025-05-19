@@ -2,7 +2,7 @@
 
 @section('main-content')
 <div class="container">
-    <h1 class="mb-4">Detail Dokumen : {{$kriterias->nama}}</h1>
+    <h1 class="mb-4">Detail Dokumen : {{ $kriterias->nama }}</h1>
 
     @if ($documents->isEmpty())
         <div class="alert alert-warning">
@@ -17,6 +17,7 @@
                     <th>Deskripsi</th>
                     <th>Tanggal Upload</th>
                     <th>Link</th>
+                    <th>Komentar</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +34,31 @@
                                 <span class="text-muted">Tidak ada file yang diupload</span>
                             @endif
                         </td>
+                        <td>
+                            {{-- Tampilkan Komentar --}}
+                            @if ($document->komentars && $document->komentars->count())
+                                <ul class="list-unstyled mb-2" style="max-height:120px; overflow-y:auto;">
+                                    @foreach ($document->komentars as $komentar)
+                                        <li>
+                                            <strong>{{ $komentar->user->name }}</strong>: {{ $komentar->isi }}<br>
+                                            <small class="text-muted">{{ $komentar->created_at->diffForHumans() }}</small>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <span class="text-muted">Belum ada komentar.</span>
+                            @endif
 
+                            {{-- Form Tambah Komentar untuk Admin, Kajur, KPS, Direktur --}}
+                            @if (in_array(Auth::user()->role, ['admin', 'kajur', 'kps', 'direktur']))
+                                <form action="{{ route('komentar.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="dokumen_id" value="{{ $document->id }}">
+                                    <textarea name="isi" class="form-control mb-2" rows="2" placeholder="Tulis komentar..." required></textarea>
+                                    <button type="submit" class="btn btn-sm btn-primary">Kirim</button>
+                                </form>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

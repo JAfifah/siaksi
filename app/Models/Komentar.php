@@ -28,6 +28,6 @@ class Komentar extends Model
     // Relasi ke tabel user
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

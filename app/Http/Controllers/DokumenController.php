@@ -63,7 +63,8 @@ class DokumenController extends Controller
 
     public function validasi($id)
     {
-        $dokumen = Dokumen::with('kriteria')->find($id); // Pastikan relasi 'kriteria' ada
+        // Load dokumen, relasi kriteria dan komentar beserta user komentarnya
+        $dokumen = Dokumen::with(['kriteria', 'komentars.user'])->find($id);
         return view('kriteria.validasi', compact('dokumen'));
     }
 
@@ -86,7 +87,7 @@ class DokumenController extends Controller
             Komentar::create([
                 'user_id' => Auth::id(),
                 'dokumen_id' => $dokumen->id,
-                'komentar' => $request->komentar,
+                'isi' => $request->komentar,
             ]);
         }
 

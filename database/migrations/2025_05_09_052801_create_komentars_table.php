@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('dokumen_id')->constrained('dokumen')->onDelete('cascade');  // Sesuaikan dengan nama tabel 'dokumens'
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('komentar');
+            $table->text('isi');
             $table->timestamps();
         });
     }

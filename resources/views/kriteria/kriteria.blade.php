@@ -20,35 +20,58 @@
                         <tr>
                             <th width="5%">No</th>
                             <th>Nama Dokumen</th>
+                            {{-- <th>Komentar</th> --}} {{-- Kolom komentar telah dihapus --}}
+                            <th>Status Validasi</th> {{-- ✅ Kolom status validasi --}}
                             <th width="25%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($kriterias->where('tahap', $tahap) as $kriteria)
+                            @php 
+                                $dokumenKriteria = collect($dokumen)
+                                    ->where('kriteria_id', $kriteria->id)
+                                    ->first(); 
+                                $status = $dokumenKriteria->status ?? null;
+                            @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $kriteria->nama }}</td>
+                                
+                                {{-- Kolom komentar dihapus sepenuhnya dari body --}}
+                                
                                 <td>
-                                    @php 
-                                        $dokumenKriteria = collect($dokumen)
-                                            ->where('kriteria_id', $kriteria->id)
-                                            ->first(); 
-                                    @endphp
-                                    
+                                    @if ($status)
+                                        @if ($status == 'disetujui')
+                                            <span class="badge badge-success">Disetujui</span>
+                                        @elseif ($status == 'dikembalikan')
+                                            <span class="badge badge-warning">Dikembalikan</span>
+                                        @else
+                                            <span class="badge badge-secondary">{{ ucfirst($status) }}</span>
+                                        @endif
+                                    @else
+                                        <span class="text-muted">Belum divalidasi</span>
+                                    @endif
+                                </td>
+
+                                <td>
                                     @if ($dokumenKriteria)
                                         <a href="{{ route('kriteria.lihat', $kriteria->id) }}" 
                                            class="btn btn-info btn-sm">
                                            <i class="fas fa-eye"></i> Lihat
                                         </a>
-                                        {{-- Perbaikan di sini: gunakan dokumenKriteria->id --}}
-                                        <a href="{{ route('dokumen.validasi', $dokumenKriteria->id) }}" 
-                                           class="btn btn-success btn-sm">
-                                           <i class="fas fa-check"></i> Validasi
-                                        </a>
+
+                                        {{-- ✅ Tampilkan tombol validasi jika status belum "disetujui" --}}
+                                        @if ($status !== 'disetujui')
+                                            <a href="{{ route('dokumen.validasi', $dokumenKriteria->id) }}" 
+                                               class="btn btn-success btn-sm">
+                                               <i class="fas fa-check"></i> Validasi
+                                            </a>
+                                        @endif
                                     @else
                                         <span class="text-muted">Belum ada dokumen</span>
                                     @endif
-                                    
+
+                                    {{-- ✅ Tombol upload selalu tersedia --}}
                                     <a href="{{ route('dokumen.upload', $kriteria->id) }}" 
                                        class="btn btn-primary btn-sm">
                                        <i class="fas fa-upload"></i> Upload
@@ -57,7 +80,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center">Tidak ada data untuk tahap ini</td>
+                                <td colspan="4" class="text-center">Tidak ada data untuk tahap ini</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -66,42 +89,4 @@
         </div>
     @endforeach
 
-    <!-- Comments Section -->
-    <div class="card mt-4">
-        <div class="card-header">
-            <h4>Komentar Kriteria {{ $nomor }}</h4>
-        </div>
-        <div class="card-body">
-            <ul class="list-group mb-3">
-                @forelse ($komentars as $komentar)
-                    <li class="list-group-item">
-                        <div class="d-flex justify-content-between">
-                            <strong>{{ $komentar->user->name }}</strong>
-                            <small class="text-muted">{{ $komentar->created_at->diffForHumans() }}</small>
-                        </div>
-                        <p class="mb-0">{{ $komentar->isi }}</p>
-                    </li>
-                @empty
-                    <li class="list-group-item text-muted">Belum ada komentar</li>
-                @endforelse
-            </ul>
-
-            @if (isset($dokumenKriteria) && $dokumenKriteria)
-                <form method="POST" action="{{ route('komentar.store') }}">
-                    @csrf
-                    <input type="hidden" name="page" value="{{ $nomor }}">
-                    <input type="hidden" name="dokumen_id" value="{{ $dokumenKriteria->id }}">
-                    <div class="form-group">
-                        <textarea name="isi" class="form-control" rows="3" placeholder="Tulis komentar..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-2">Kirim Komentar</button>
-                </form>
-            @else
-                <div class="alert alert-warning">
-                    Belum ada dokumen yang bisa dikomentari.
-                </div>
-            @endif
-        </div>
-    </div>
-</div>
 @endsection
