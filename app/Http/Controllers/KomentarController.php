@@ -21,7 +21,7 @@ class KomentarController extends Controller
         ]);
 
         // Hanya admin, kajur, kps, dan direktur yang boleh komentar
-        $allowedRoles = ['admin', 'kajur', 'kps', 'direktur'];
+        $allowedRoles = ['administrator', 'kajur', 'kps', 'direktur'];
         $user = Auth::user();
 
         if (!in_array($user->role, $allowedRoles)) {
