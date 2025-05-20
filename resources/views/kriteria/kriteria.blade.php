@@ -20,8 +20,7 @@
                         <tr>
                             <th width="5%">No</th>
                             <th>Nama Dokumen</th>
-                            {{-- <th>Komentar</th> --}} {{-- Kolom komentar telah dihapus --}}
-                            <th>Status Validasi</th> {{-- ✅ Kolom status validasi --}}
+                            <th>Status Validasi</th>
                             <th width="25%">Aksi</th>
                         </tr>
                     </thead>
@@ -37,14 +36,14 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $kriteria->nama }}</td>
                                 
-                                {{-- Kolom komentar dihapus sepenuhnya dari body --}}
-                                
                                 <td>
                                     @if ($status)
                                         @if ($status == 'disetujui')
                                             <span class="badge badge-success">Disetujui</span>
                                         @elseif ($status == 'dikembalikan')
                                             <span class="badge badge-warning">Dikembalikan</span>
+                                        @elseif ($status == 'dikirim')
+                                            <span class="badge badge-info">Dikirim</span>
                                         @else
                                             <span class="badge badge-secondary">{{ ucfirst($status) }}</span>
                                         @endif
@@ -60,22 +59,26 @@
                                            <i class="fas fa-eye"></i> Lihat
                                         </a>
 
-                                        {{-- ✅ Tampilkan tombol validasi jika status belum "disetujui" --}}
                                         @if ($status !== 'disetujui')
                                             <a href="{{ route('dokumen.validasi', $dokumenKriteria->id) }}" 
                                                class="btn btn-success btn-sm">
                                                <i class="fas fa-check"></i> Validasi
                                             </a>
                                         @endif
+
+                                        @if ($status === 'dikembalikan')
+                                            <a href="{{ route('kriteria.edit', $dokumenKriteria->id) }}" 
+                                               class="btn btn-warning btn-sm">
+                                               <i class="fas fa-edit"></i> Update
+                                            </a>
+                                        @endif
                                     @else
                                         <span class="text-muted">Belum ada dokumen</span>
+                                        <a href="{{ route('dokumen.upload', $kriteria->id) }}" 
+                                           class="btn btn-primary btn-sm">
+                                           <i class="fas fa-upload"></i> Upload
+                                        </a>
                                     @endif
-
-                                    {{-- ✅ Tombol upload selalu tersedia --}}
-                                    <a href="{{ route('dokumen.upload', $kriteria->id) }}" 
-                                       class="btn btn-primary btn-sm">
-                                       <i class="fas fa-upload"></i> Upload
-                                    </a>
                                 </td>
                             </tr>
                         @empty
@@ -88,5 +91,5 @@
             </div>
         </div>
     @endforeach
-
+</div>
 @endsection

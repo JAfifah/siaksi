@@ -33,7 +33,7 @@ class KriteriaController extends Controller
         ]);
     }
 
-    public function upload($id = null)
+    public function upload($id)
     {
         $kriteria = Kriteria::all();
         return view('kriteria.upload', compact('kriteria', 'id'));

@@ -48,21 +48,28 @@
                         @endif
                     </div>
                 @else
-                    {{-- Tombol Kembalikan --}}
-                    <form action="{{ route('dokumen.kembalikan', $dokumen->id) }}" method="POST" class="mt-3">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="komentar" class="form-label">Komentar Pengembalian</label>
-                            <textarea name="komentar" id="komentar" class="form-control" rows="3" placeholder="Tulis alasan pengembalian..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-danger">Kembalikan Dokumen</button>
-                    </form>
+                    {{-- Validasi hanya untuk administrator, koordinator, dan direktur --}}
+                    @if (in_array(auth()->user()->role, ['administrator', 'koordinator', 'direktur']))
+                        {{-- Tombol Kembalikan --}}
+                        <form action="{{ route('dokumen.kembalikan', $dokumen->id) }}" method="POST" class="mt-3">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="komentar" class="form-label">Komentar Pengembalian</label>
+                                <textarea name="komentar" id="komentar" class="form-control" rows="3" placeholder="Tulis alasan pengembalian..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-danger">Kembalikan Dokumen</button>
+                        </form>
 
-                    {{-- Tombol Setujui --}}
-                    <form action="{{ route('dokumen.setujui', $dokumen->id) }}" method="POST" class="mt-3">
-                        @csrf
-                        <button type="submit" class="btn btn-success">Setujui Dokumen</button>
-                    </form>
+                        {{-- Tombol Setujui --}}
+                        <form action="{{ route('dokumen.setujui', $dokumen->id) }}" method="POST" class="mt-3">
+                            @csrf
+                            <button type="submit" class="btn btn-success">Setujui Dokumen</button>
+                        </form>
+                    @else
+                        <div class="alert alert-danger mt-3">
+                            <strong>Maaf!</strong> Anda tidak memiliki akses untuk memvalidasi dokumen ini.
+                        </div>
+                    @endif
                 @endif
             </div>
         </div>

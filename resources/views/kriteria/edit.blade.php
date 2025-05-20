@@ -5,13 +5,15 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
 
-            @if (in_array(auth()->user()->role, ['anggota', 'administrator']))
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Upload Dokumen</h4>
-                    </div>
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Update Dokumen</h4>
+                </div>
 
-                    <div class="card-body">
+                <div class="card-body">
+
+                    {{-- Cek apakah user boleh mengedit --}}
+                    @if (auth()->user()->role === 'anggota' || auth()->user()->role === 'administrator')
 
                         {{-- Tampilkan error validasi --}}
                         @if ($errors->any())
@@ -25,23 +27,24 @@
                             </div>
                         @endif
 
-                        {{-- Form upload dokumen --}}
-                        <form action="{{ route('dokumen.store') }}" method="POST" enctype="multipart/form-data">
+                        {{-- Form edit dokumen --}}
+                        <form action="{{ route('kriteria.update', $dokumen->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <input type="hidden" name="kriteria_id" value="{{ $id }}">
+                            @method('PUT')
+                            <input type="hidden" name="kriteria_id" value="{{ $dokumen->kriteria_id }}">
 
                             <div class="mb-3">
                                 <label for="judul" class="form-label">Judul Dokumen</label>
-                                <input type="text" name="judul" class="form-control" required>
+                                <input type="text" name="judul" class="form-control" value="{{ $dokumen->judul }}" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="deskripsi" class="form-label">Deskripsi Dokumen</label>
-                                <textarea name="deskripsi" class="form-control" rows="4" required></textarea>
+                                <textarea name="deskripsi" class="form-control" rows="4" required>{{ $dokumen->deskripsi }}</textarea>
                             </div>
 
                             <div class="mb-3">
-                                <label for="file" class="form-label d-block">Upload File</label>
+                                <label for="file" class="form-label d-block">Upload File Baru (Opsional)</label>
                                 <label class="btn btn-outline-primary">
                                     Pilih File
                                     <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.jpg,.png" hidden>
@@ -54,32 +57,26 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="link" class="form-label">Masukkan Link Dokumen (Opsional)</label>
-                                <input type="url" name="link" class="form-control" placeholder="https://contoh.com/dokumen">
-                                <div class="form-text">Isi salah satu: file *atau* link.</div>
+                                <label for="link" class="form-label">Link Dokumen (Opsional)</label>
+                                <input type="url" name="link" class="form-control" value="{{ $dokumen->link }}" placeholder="https://contoh.com/dokumen">
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary" onclick="history.back()">Kembali</button>
-                                <button type="submit" class="btn btn-success">Upload</button>
+                                <a href="{{ url('/kriteria/kriteria.blade.php') }}" class="btn btn-secondary">Kembali</a>
+                                <button type="submit" class="btn btn-warning">Update</button>
                             </div>
                         </form>
 
-                    </div>
+                    @else
+                        <div class="alert alert-danger">
+                            Anda tidak memiliki izin untuk mengedit dokumen ini.
+                        </div>
+                    @endif
+
                 </div>
-            @else
-                <div class="alert alert-danger">
-                    <strong>Maaf!</strong> Anda tidak memiliki akses.
-                </div>
-            @endif
+            </div>
 
         </div>
     </div>
 </div>
-
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-        {{ session('success') }}
-    </div>
-@endif
 @endsection

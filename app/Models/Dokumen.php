@@ -14,7 +14,8 @@ class Dokumen extends Model
         'deskripsi',
         'file_path',
         'user_id',
-        'kriteria_id'
+        'kriteria_id',
+        'status',
     ];
 
     public function kriteria()

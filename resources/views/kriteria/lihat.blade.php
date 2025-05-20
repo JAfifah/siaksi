@@ -50,7 +50,7 @@
                             @endif
 
                             {{-- Form Tambah Komentar untuk Admin, Kajur, KPS, Direktur --}}
-                            @if (in_array(Auth::user()->role, ['administrator', 'kajur', 'kps', 'direktur']))
+                            @if (in_array(Auth::user()->role, ['administrator', 'kajur', 'kps', 'direktur', 'koordinator']))
                                 <form action="{{ route('komentar.store') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="dokumen_id" value="{{ $document->id }}">

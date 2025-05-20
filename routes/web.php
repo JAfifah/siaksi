@@ -71,6 +71,8 @@ Route::get('/kriteria/{nomor}', [KriteriaController::class, 'show'])->name('krit
 Route::get('/kriteria/{id}/lihat', [KriteriaController::class, 'lihat'])->name('kriteria.lihat');
 Route::get('/kriteria/upload/{id}', [KriteriaController::class, 'upload'])->name('dokumen.upload');
 Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kriteria.store');
+Route::get('/kriteria/{id}/edit', [DokumenController::class, 'edit'])->name('kriteria.edit');
+Route::put('/kriteria/{id}/update', [DokumenController::class, 'update'])->name('kriteria.update');
 
 # Komentar
 Route::post('/komentar', [KomentarController::class, 'store'])->name('komentar.store');
