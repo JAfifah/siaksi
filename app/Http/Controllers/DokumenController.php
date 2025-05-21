@@ -82,7 +82,7 @@ class DokumenController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'kriteria_id' => 'required|exists:kriteria,id',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,zip|max:4096',
             'link' => 'nullable|url',
         ]);
 
