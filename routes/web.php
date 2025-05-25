@@ -67,12 +67,15 @@ Route::get('/beranda/sasaran', fn() => view('beranda.sasaran'))->name('beranda.s
 Route::get('/denah', fn() => view('denah'))->name('denah');
 
 # Kriteria
+Route::get('/kriteria/create', [KriteriaController::class, 'create'])->name('kriteria.create');
 Route::get('/kriteria/{nomor}', [KriteriaController::class, 'show'])->name('kriteria.show');
 Route::get('/kriteria/{id}/lihat', [KriteriaController::class, 'lihat'])->name('kriteria.lihat');
 Route::get('/kriteria/upload/{id}', [KriteriaController::class, 'upload'])->name('dokumen.upload');
 Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kriteria.store');
 Route::get('/kriteria/{id}/edit', [DokumenController::class, 'edit'])->name('kriteria.edit');
 Route::put('/kriteria/{id}/update', [DokumenController::class, 'update'])->name('kriteria.update');
+Route::resource('kriteria', KriteriaController::class);
+
 
 # Komentar
 Route::post('/komentar', [KomentarController::class, 'store'])->name('komentar.store');
@@ -91,3 +94,5 @@ Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->na
 Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');
 Route::post('/dokumen/{id}/kembalikan', [DokumenController::class, 'kembalikan'])->name('dokumen.kembalikan');
 Route::post('/dokumen/{id}/setujui', [DokumenController::class, 'setujui'])->name('dokumen.setujui');
+Route::put('/dokumen/{id}', [DokumenController::class, 'update'])->name('dokumen.update');
+

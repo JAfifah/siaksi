@@ -28,7 +28,7 @@
                         @endif
 
                         {{-- Form edit dokumen --}}
-                        <form action="{{ route('kriteria.update', $dokumen->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('dokumen.update', $dokumen->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="kriteria_id" value="{{ $dokumen->kriteria_id }}">

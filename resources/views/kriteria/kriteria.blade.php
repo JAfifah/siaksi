@@ -10,8 +10,9 @@
 
     @foreach ($tahapan as $tahap)
         <div class="card mb-4">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title text-capitalize mb-0">{{ $tahap }}</h3>
+                
             </div>
             
             <div class="card-body">
@@ -21,7 +22,7 @@
                             <th width="5%">No</th>
                             <th>Nama Dokumen</th>
                             <th>Status Validasi</th>
-                            <th width="25%">Aksi</th>
+                            <th width="35%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,32 +54,49 @@
                                 </td>
 
                                 <td>
-                                    @if ($dokumenKriteria)
-                                        <a href="{{ route('kriteria.lihat', $kriteria->id) }}" 
-                                           class="btn btn-info btn-sm">
-                                           <i class="fas fa-eye"></i> Lihat
-                                        </a>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @if ($dokumenKriteria)
+                                            <a href="{{ route('kriteria.lihat', $kriteria->id) }}" 
+                                               class="btn btn-info btn-sm">
+                                               <i class="fas fa-eye"></i> Lihat
+                                            </a>
 
-                                        @if ($status !== 'disetujui')
-                                            <a href="{{ route('dokumen.validasi', $dokumenKriteria->id) }}" 
-                                               class="btn btn-success btn-sm">
-                                               <i class="fas fa-check"></i> Validasi
+                                            @if ($status !== 'disetujui')
+                                                <a href="{{ route('dokumen.validasi', $dokumenKriteria->id) }}" 
+                                                   class="btn btn-success btn-sm">
+                                                   <i class="fas fa-check"></i> Validasi
+                                                </a>
+                                            @endif
+
+                                            @if ($status === 'dikembalikan')
+                                                <a href="{{ route('kriteria.edit', $dokumenKriteria->id) }}" 
+                                                   class="btn btn-warning btn-sm">
+                                                   <i class="fas fa-edit"></i> Update
+                                                </a>
+                                            @endif
+                                        @else
+                                            <span class="text-muted"></span>
+                                            <a href="{{ route('dokumen.upload', $kriteria->id) }}" 
+                                               class="btn btn-primary btn-sm">
+                                               <i class="fas fa-upload"></i> Upload
                                             </a>
                                         @endif
 
-                                        @if ($status === 'dikembalikan')
-                                            <a href="{{ route('kriteria.edit', $dokumenKriteria->id) }}" 
-                                               class="btn btn-warning btn-sm">
-                                               <i class="fas fa-edit"></i> Update
-                                            </a>
-                                        @endif
-                                    @else
-                                        <span class="text-muted">Belum ada dokumen</span>
-                                        <a href="{{ route('dokumen.upload', $kriteria->id) }}" 
-                                           class="btn btn-primary btn-sm">
-                                           <i class="fas fa-upload"></i> Upload
+                                        {{-- Tombol edit kriteria --}}
+                                        <a href="{{ route('kriteria.edit', $kriteria->id) }}" 
+                                           class="btn btn-outline-secondary btn-sm">
+                                           <i class="fas fa-pen"></i> Edit Kriteria
                                         </a>
-                                    @endif
+
+                                        {{-- Tombol hapus kriteria --}}
+                                        <form action="{{ route('kriteria.destroy', $kriteria->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kriteria ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -89,7 +107,20 @@
                     </tbody>
                 </table>
             </div>
+            <a href="{{ route('kriteria.create', ['tahap' => $tahap, 'nomor' => $nomor]) }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Tambah Kriteria
+                </a>
         </div>
     @endforeach
+
+    @if ($errors->any())
+    <div class="alert alert-danger mt-2">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 </div>
 @endsection
