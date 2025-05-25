@@ -44,9 +44,9 @@
                                 <label for="file" class="form-label d-block">Upload File</label>
                                 <label class="btn btn-outline-primary">
                                     Pilih File
-                                    <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.jpg,.png" hidden>
+                                    <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.jpg,.png,.zip" hidden>
                                 </label>
-                                <div class="form-text mt-1">Format: pdf, doc, docx, jpg, png. Maksimal 2MB.</div>
+                                <div class="form-text mt-1">Format: pdf, doc, docx, jpg, png, zip. Maksimal 2MB.</div>
                             </div>
 
                             <div class="text-center mb-2">
