@@ -75,6 +75,8 @@ Route::post('/kriteria/upload', [KriteriaController::class, 'store'])->name('kri
 Route::get('/kriteria/{id}/edit', [DokumenController::class, 'edit'])->name('kriteria.edit');
 Route::put('/kriteria/{id}/update', [DokumenController::class, 'update'])->name('kriteria.update');
 Route::resource('kriteria', KriteriaController::class);
+Route::get('/kriteria/{id}/edit', [KriteriaController::class, 'edit'])->name('kriteria.edit');
+Route::put('/kriteria/{id}', [KriteriaController::class, 'update'])->name('kriteria.update');
 
 
 # Komentar
@@ -89,6 +91,8 @@ Route::get('/dokumen/create', [DokumenController::class, 'create']); // Sudah ad
 Route::get('/dokumen/{id}/lihat', [DokumenController::class, 'showDokumen'])->name('dokumen.lihat');
 Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
 Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');
+Route::get('/dokumen/{id}/edit', [DokumenController::class, 'edit'])->name('dokumen.edit');
+
 
 # validasi
 Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');

@@ -10,6 +10,16 @@ use App\Models\Kriteria;
 
 class KriteriaController extends Controller
 {
+    public function index()
+    {
+        // Tambahkan ini agar route('kriteria.index') bisa digunakan
+        $kriterias = Kriteria::all();
+        $dokumen = Dokumen::all();
+        $nomor = 1; // Gantilah dengan nilai default atau logika sesuai kebutuhan Anda
+
+        return view('kriteria.kriteria', compact('kriterias', 'dokumen', 'nomor'));
+    }
+
     public function show($nomor)
     {
         $kriterias = Kriteria::where('nomor', $nomor)->get();
@@ -80,5 +90,24 @@ class KriteriaController extends Controller
             Log::error('Gagal menghapus kriteria: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus kriteria.');
         }
+    }
+
+    public function edit($id)
+    {
+        $kriteria = Kriteria::findOrFail($id);
+        return view('kriteria.editkriteria', compact('kriteria'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'tahap' => 'required|in:penetapan,pelaksanaan,evaluasi,pengendalian,peningkatan',
+        ]);
+
+        $kriteria = Kriteria::findOrFail($id);
+        $kriteria->update($request->only('nama', 'tahap'));
+
+        return redirect()->route('kriteria.index')->with('success', 'Kriteria berhasil diperbarui.');
     }
 }

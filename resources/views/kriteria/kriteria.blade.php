@@ -12,7 +12,6 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title text-capitalize mb-0">{{ $tahap }}</h3>
-                
             </div>
             
             <div class="card-body">
@@ -69,7 +68,7 @@
                                             @endif
 
                                             @if ($status === 'dikembalikan')
-                                                <a href="{{ route('kriteria.edit', $dokumenKriteria->id) }}" 
+                                                <a href="{{ route('dokumen.edit', $dokumenKriteria->id) }}" 
                                                    class="btn btn-warning btn-sm">
                                                    <i class="fas fa-edit"></i> Update
                                                 </a>
@@ -82,20 +81,21 @@
                                             </a>
                                         @endif
 
-                                        {{-- Tombol edit kriteria --}}
-                                        <a href="{{ route('kriteria.edit', $kriteria->id) }}" 
-                                           class="btn btn-outline-secondary btn-sm">
-                                           <i class="fas fa-pen"></i> Edit Kriteria
-                                        </a>
+                                        {{-- Tombol edit dan hapus hanya untuk administrator dan anggota --}}
+                                        @if (in_array(auth()->user()->role, ['administrator', 'anggota']))
+                                            <a href="{{ route('kriteria.edit', $kriteria->id) }}" 
+                                               class="btn btn-outline-secondary btn-sm">
+                                               <i class="fas fa-pen"></i> Edit Kriteria
+                                            </a>
 
-                                        {{-- Tombol hapus kriteria --}}
-                                        <form action="{{ route('kriteria.destroy', $kriteria->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kriteria ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                <i class="fas fa-trash"></i> Hapus
-                                            </button>
-                                        </form>
+                                            <form action="{{ route('kriteria.destroy', $kriteria->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kriteria ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -107,9 +107,13 @@
                     </tbody>
                 </table>
             </div>
-            <a href="{{ route('kriteria.create', ['tahap' => $tahap, 'nomor' => $nomor]) }}" class="btn btn-sm btn-primary">
+
+            {{-- Tombol tambah kriteria hanya untuk administrator dan anggota --}}
+            @if (in_array(auth()->user()->role, ['administrator', 'anggota']))
+                <a href="{{ route('kriteria.create', ['tahap' => $tahap, 'nomor' => $nomor]) }}" class="btn btn-sm btn-primary">
                     <i class="fas fa-plus"></i> Tambah Kriteria
                 </a>
+            @endif
         </div>
     @endforeach
 
@@ -121,6 +125,6 @@
             @endforeach
         </ul>
     </div>
-@endif
+    @endif
 </div>
 @endsection
