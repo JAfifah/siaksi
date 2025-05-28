@@ -10,9 +10,19 @@ class Document extends Model
     use HasFactory;
 
     protected $fillable = [
-        'judul',
-        'deskripsi',
+        'title',
+        'description',
         'file_path',
-        'user_id',
+        'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
 }

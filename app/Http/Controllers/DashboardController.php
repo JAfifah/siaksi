@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Activity;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        $activities = Activity::with(['user', 'document'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('dashboard', compact('activities'));
     }
 }
