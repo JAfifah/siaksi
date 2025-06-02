@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('file_path'); // Menambahkan kolom file_path
             $table->foreignId('kriteria_id')->constrained('kriteria'); // sesuaikan jika nama tabel kriteria berbeda
             $table->foreignId('user_id')->constrained('users'); // Menambahkan kolom user_id yang merujuk ke tabel users
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

@@ -12,10 +12,9 @@ class KriteriaController extends Controller
 {
     public function index()
     {
-        // Tambahkan ini agar route('kriteria.index') bisa digunakan
         $kriterias = Kriteria::all();
         $dokumen = Dokumen::all();
-        $nomor = 1; // Gantilah dengan nilai default atau logika sesuai kebutuhan Anda
+        $nomor = 1;
 
         return view('kriteria.kriteria', compact('kriterias', 'dokumen', 'nomor'));
     }
@@ -32,13 +31,18 @@ class KriteriaController extends Controller
         return view('kriteria.kriteria', compact('kriterias', 'dokumen', 'komentars', 'nomor'));
     }
 
-    public function lihat($id)
+    public function lihat($nomor, $id)
     {
-        $kriterias = Kriteria::find($id);
+        logger()->info("Nomor diterima:", ['nomor' => $nomor]);
+        logger()->info("ID kriteria yang diterima:", ['id' => $id]);
+
+        $kriteria = Kriteria::findOrFail($id);
         $documents = Dokumen::where('kriteria_id', $id)->with('kriteria')->get();
 
+        logger()->info('Dokumen ditemukan:', $documents->toArray());
+
         return view('kriteria.lihat', [
-            'kriterias' => $kriterias,
+            'kriterias' => $kriteria,
             'documents' => $documents,
         ]);
     }
@@ -53,29 +57,92 @@ class KriteriaController extends Controller
     {
         $tahap = $request->input('tahap');
         $nomor = $request->input('nomor');
+
         return view('kriteria.create', compact('tahap', 'nomor'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'judul' => 'required|string|max:255',
             'tahap' => 'required|string|max:50',
-            'nomor' => 'required|string|max:255'
+            'nomor' => 'required|string|max:255',
         ]);
 
         try {
-            $kriteria = new Kriteria();
-            $kriteria->nama = $request->input('nama');
-            $kriteria->tahap = $request->input('tahap');
-            $kriteria->nomor = $request->input('nomor');
-            $kriteria->save();
+            $kriteria = Kriteria::create([
+                'nama' => $request->judul,
+                'tahap' => $request->tahap,
+                'nomor' => $request->nomor,
+            ]);
 
             return redirect()->route('kriteria.show', $kriteria->nomor)
                 ->with('success', 'Kriteria berhasil ditambahkan.');
         } catch (\Exception $e) {
             Log::error('Gagal menambahkan kriteria: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+        }
+    }
+
+    public function storeWithDokumen(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'tahap' => 'required|string|max:50',
+            'nomor' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,zip|max:2048',
+            'link' => 'nullable|url',
+            'status' => 'nullable|string|in:,dikirim',
+        ]);
+
+        // Validasi: setidaknya file atau link harus diisi
+        if (!$request->hasFile('file') && empty($request->link)) {
+            return back()
+                ->withErrors(['file' => 'Harap unggah file atau isi link.'])
+                ->withInput();
+        }
+
+        try {
+            // Simpan data kriteria
+            $kriteria = Kriteria::create([
+                'nama' => $request->judul,
+                'tahap' => $request->tahap,
+                'nomor' => $request->nomor,
+            ]);
+
+            // Proses upload atau link dokumen
+            $filePath = null;
+
+            if ($request->hasFile('file')) {
+                $uploadedFile = $request->file('file');
+                $filename = time() . '_' . preg_replace('/\s+/', '_', $uploadedFile->getClientOriginalName());
+                $uploadedFile->move(public_path('dokumen'), $filename);
+                $filePath = $filename;
+            } else {
+                $filePath = $request->link;
+            }
+
+            // Simpan data dokumen
+            Dokumen::create([
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi,
+                'file_path' => $filePath,
+                'tahap' => $request->tahap,
+                'user_id' => auth()->id(),
+                'kriteria_id' => $kriteria->id,
+                'status' => $request->status ?: null,
+            ]);
+
+            return redirect()->route('kriteria.show', $kriteria->nomor)
+                ->with('success', 'Kriteria dan dokumen berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            Log::error('Gagal menyimpan data: ' . $e->getMessage());
+
+            return back()
+                ->with('error', 'Terjadi kesalahan saat menyimpan data.')
+                ->withInput();
         }
     }
 
@@ -85,16 +152,18 @@ class KriteriaController extends Controller
             $kriteria = Kriteria::findOrFail($id);
             $kriteria->delete();
 
-            return redirect()->back()->with('success', 'Kriteria berhasil dihapus.');
+            return back()->with('success', 'Kriteria berhasil dihapus.');
         } catch (\Exception $e) {
             Log::error('Gagal menghapus kriteria: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus kriteria.');
+
+            return back()->with('error', 'Terjadi kesalahan saat menghapus kriteria.');
         }
     }
 
     public function edit($id)
     {
         $kriteria = Kriteria::findOrFail($id);
+
         return view('kriteria.editkriteria', compact('kriteria'));
     }
 

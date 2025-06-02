@@ -1,26 +1,111 @@
 @extends('layouts.app')
 
 @section('main-content')
-<div class="container">
-    <h1>Tambah Kriteria</h1>
+<div class="container mt-5">
+    <h2>Tambah Kriteria & Upload Dokumen</h2>
+
+    {{-- Alert sukses upload --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <strong>Berhasil!</strong> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    {{-- Alert gagal jika ada --}}
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            <strong>Gagal!</strong> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <p>Tahap: <strong>{{ $tahap }}</strong></p>
     <p>Nomor: <strong>{{ $nomor }}</strong></p>
 
-    <form action="{{ route('kriteria.store') }}" method="POST">
-        @csrf
+    @if (in_array(auth()->user()->role, ['anggota', 'administrator']))
+        {{-- Tampilkan error validasi --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <h6><strong>Oops!</strong> Ada kesalahan pada input:</h6>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <div class="form-group">
-            <label for="nama">Nama Kriteria</label>
-            <input type="text" name="nama" id="nama" class="form-control" required>
+        {{-- Form Simpan Kriteria + Upload Dokumen --}}
+        <form id="formKriteria" action="{{ route('kriteria.storeWithDokumen') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            {{-- Hidden input status --}}
+            <input type="hidden" name="status" id="status" value="">
+
+            {{-- Hidden input tahap dan nomor --}}
+            <input type="hidden" name="tahap" value="{{ $tahap }}">
+            <input type="hidden" name="nomor" value="{{ $nomor }}">
+
+            {{-- Data Dokumen --}}
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <strong>Upload Dokumen</strong>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="judul" class="form-label">Judul Dokumen</label>
+                        <input type="text" id="judul" name="judul" class="form-control" required value="{{ old('judul') }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="deskripsi" class="form-label">Deskripsi Dokumen</label>
+                        <textarea id="deskripsi" name="deskripsi" class="form-control" rows="4" required>{{ old('deskripsi') }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label d-block">Upload File</label>
+                        <label class="btn btn-outline-primary">
+                            Pilih File
+                            <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png,.zip" hidden>
+                        </label>
+                        <div class="form-text">Format: pdf, doc, docx, jpg, png, zip. Maksimal 2MB.</div>
+                    </div>
+
+                    <div class="text-center mb-2">
+                        <strong>— ATAU —</strong>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="link" class="form-label">Link Dokumen (Opsional)</label>
+                        <input type="url" id="link" name="link" class="form-control" placeholder="https://contoh.com/dokumen" value="{{ old('link') }}">
+                        <div class="form-text">Isi salah satu: file <em>atau</em> link.</div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Tombol --}}
+            <div class="d-flex justify-content-between">
+                <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
+
+                <div>
+                    <button type="button" class="btn btn-warning me-2" onclick="submitForm('')">Save (Draft)</button>
+                    <button type="button" class="btn btn-success" onclick="submitForm('dikirim')">Submit</button>
+                </div>
+            </div>
+        </form>
+    @else
+        <div class="alert alert-danger mt-3">
+            <strong>Maaf!</strong> Anda tidak memiliki akses.
         </div>
-
-        <input type="hidden" name="tahap" value="{{ $tahap }}">
-        <input type="hidden" name="nomor" value="{{ $nomor }}">
-
-        <button type="submit" class="btn btn-primary mt-2">Simpan</button>
-    </form>
+    @endif
 </div>
 
+{{-- Script untuk set value status dan submit form --}}
+<script>
+    function submitForm(statusValue) {
+        document.getElementById('status').value = statusValue;
+        document.getElementById('formKriteria').submit();
+    }
+</script>
 @endsection
-

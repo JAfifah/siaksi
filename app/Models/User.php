@@ -47,4 +47,11 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [];
+
+    public function activities()
+{
+    return $this->hasMany(Activity::class);
 }
+
+}
+

@@ -2,45 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Activity extends Model
 {
-    use HasFactory;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'user_id',
-        'document_id', 
-        'description'
+        'dokumen_id',
+        'komentar_id',  // tambahkan jika pakai komentar_id di activities
+        'type',
+        'description',
+        'action',
+        'is_read',
     ];
 
-    /**
-     * Get the user that owns the activity.
-     */
-    public function user()
+    // Relasi ke user
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the document associated with the activity.
-     */
-    public function document()
+    // Relasi ke dokumen
+    public function dokumen(): BelongsTo
     {
-        return $this->belongsTo(Document::class);
+        return $this->belongsTo(Dokumen::class, 'dokumen_id');
     }
 
-    /**
-     * Get created time in human readable format
-     */
-    public function getCreatedAtAttribute($value)
+    // Relasi ke komentar
+    public function komentar(): BelongsTo
     {
-        return \Carbon\Carbon::parse($value)->diffForHumans();
+        return $this->belongsTo(Komentar::class, 'komentar_id');
     }
 }

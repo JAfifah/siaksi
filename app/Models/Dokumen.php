@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Activity;
 
 class Dokumen extends Model
 {
@@ -18,6 +19,8 @@ class Dokumen extends Model
         'status',
     ];
 
+    protected $table = 'dokumen';
+
     public function kriteria()
     {
         return $this->belongsTo(Kriteria::class);
@@ -28,13 +31,16 @@ class Dokumen extends Model
         return $this->hasMany(Komentar::class, 'dokumen_id', 'id');
     }
 
+    // Relasi ke activities
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'dokumen_id', 'id');
+    }
+
     public function validasi($id)
-{
-    $dokumen = Dokumen::with('kriteria')->find($id); // <--- ini penting!
+    {
+        $dokumen = Dokumen::with('kriteria')->find($id); // <--- ini penting!
 
-    return view('kriteria.validasi', compact('dokumen'));
-}
-
-
-    protected $table = 'dokumen';
+        return view('kriteria.validasi', compact('dokumen'));
+    }
 }

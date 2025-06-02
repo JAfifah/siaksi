@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('komentars', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dokumen_id')->constrained('dokumen')->onDelete('cascade');  // Sesuaikan dengan nama tabel 'dokumens'
+
+            // Foreign key dokumen_id ke dokumen.id dengan onDelete cascade
+            $table->foreignId('dokumen_id')->constrained('dokumen')->onDelete('cascade');
+
+            // Foreign key user_id ke users.id dengan onDelete cascade
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('isi');
+
+            $table->text('isi'); // Isi komentar
+
             $table->timestamps();
         });
     }

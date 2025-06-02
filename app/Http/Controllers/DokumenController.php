@@ -53,6 +53,9 @@ class DokumenController extends Controller
             $filePath = $request->link;
         }
 
+        // ✅ Tentukan status berdasarkan tombol yang diklik
+        $status = $request->has('draft') ? 'draft' : 'dikirim';
+
         // Menyimpan dokumen ke database
         Dokumen::create([
             'judul' => $request->judul,
@@ -60,7 +63,7 @@ class DokumenController extends Controller
             'file_path' => $filePath,
             'user_id' => auth()->id(),
             'kriteria_id' => $request->kriteria_id,
-            'status'=>'dikirim',
+            'status' => $status,
         ]);
 
         return redirect()->back()->with('success', 'Dokumen berhasil diupload.');
@@ -86,9 +89,11 @@ class DokumenController extends Controller
             'link' => 'nullable|url',
         ]);
 
-        // Validasi minimal salah satu harus diisi
+        // Validasi minimal salah satu harus diisi (file baru, link, atau file lama masih ada)
         if (!$request->hasFile('file') && !$request->link && !$dokumen->file_path) {
-            return redirect()->back()->withErrors(['file' => 'Harap unggah file atau isi link.'])->withInput();
+            return redirect()->back()
+                ->withErrors(['file' => 'Harap unggah file atau isi link.'])
+                ->withInput();
         }
 
         $filePath = $dokumen->file_path;
@@ -112,16 +117,26 @@ class DokumenController extends Controller
             $filePath = $request->link;
         }
 
+        // Tentukan status berdasarkan tombol yang diklik (action)
+        $status = null;
+        if ($request->input('action') === 'submit') {
+            $status = 'dikirim';
+        } elseif ($request->input('action') === 'save') {
+            $status = null;
+        }
+
         // Update dokumen
         $dokumen->update([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'file_path' => $filePath,
             'kriteria_id' => $request->kriteria_id,
-            'status'=>'dikirim',
+            'status' => $status,
         ]);
 
-        return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
+        $redirectUrl = $request->input('redirect_url', url('/')); // fallback ke homepage kalau kosong
+
+        return redirect($redirectUrl)->with('success', 'Dokumen berhasil diperbarui.');
     }
 
     public function showDokumen($id)

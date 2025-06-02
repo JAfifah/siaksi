@@ -53,42 +53,34 @@
                                 </td>
 
                                 <td>
-                                    <div class="d-flex flex-wrap gap-1">
+                                    <div class="d-flex flex-wrap" style="gap: 0.5rem;">
                                         @if ($dokumenKriteria)
-                                            <a href="{{ route('kriteria.lihat', $kriteria->id) }}" 
-                                               class="btn btn-info btn-sm">
-                                               <i class="fas fa-eye"></i> Lihat
+                                            <a href="{{ route('kriteria.lihat', ['nomor' => $nomor, 'id' => $kriteria->id]) }}" class="btn btn-info btn-sm">
+                                                <i class="fas fa-eye"></i> Lihat
                                             </a>
 
                                             @if ($status !== 'disetujui')
                                                 <a href="{{ route('dokumen.validasi', $dokumenKriteria->id) }}" 
                                                    class="btn btn-success btn-sm">
-                                                   <i class="fas fa-check"></i> Validasi
+                                                    <i class="fas fa-check"></i> Validasi
                                                 </a>
                                             @endif
 
-                                            @if ($status === 'dikembalikan')
-                                                <a href="{{ route('dokumen.edit', $dokumenKriteria->id) }}" 
-                                                   class="btn btn-warning btn-sm">
-                                                   <i class="fas fa-edit"></i> Update
+                                            @if ($status === 'dikembalikan' || is_null($status))
+                                                <a href="{{ route('dokumen.edit', $dokumenKriteria->id) }}" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-edit"></i> Update
                                                 </a>
                                             @endif
-                                        @else
-                                            <span class="text-muted"></span>
-                                            <a href="{{ route('dokumen.upload', $kriteria->id) }}" 
-                                               class="btn btn-primary btn-sm">
-                                               <i class="fas fa-upload"></i> Upload
-                                            </a>
-                                        @endif
-
-                                        {{-- Tombol edit dan hapus hanya untuk administrator dan anggota --}}
-                                        @if (in_array(auth()->user()->role, ['administrator', 'anggota']))
+                                        @elseif (in_array(auth()->user()->role, ['administrator', 'anggota']))
                                             <a href="{{ route('kriteria.edit', $kriteria->id) }}" 
                                                class="btn btn-outline-secondary btn-sm">
-                                               <i class="fas fa-pen"></i> Edit Kriteria
+                                                <i class="fas fa-pen"></i> Edit Kriteria
                                             </a>
 
-                                            <form action="{{ route('kriteria.destroy', $kriteria->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kriteria ini?')">
+                                            <form action="{{ route('kriteria.destroy', $kriteria->id) }}" 
+                                                  method="POST" 
+                                                  onsubmit="return confirm('Yakin ingin menghapus kriteria ini?')" 
+                                                  style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm">

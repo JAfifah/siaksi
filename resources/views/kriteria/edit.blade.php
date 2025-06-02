@@ -13,7 +13,7 @@
                 <div class="card-body">
 
                     {{-- Cek apakah user boleh mengedit --}}
-                    @if (auth()->user()->role === 'anggota' || auth()->user()->role === 'administrator')
+                    @if (in_array(auth()->user()->role, ['anggota', 'administrator']))
 
                         {{-- Tampilkan error validasi --}}
                         @if ($errors->any())
@@ -31,16 +31,17 @@
                         <form action="{{ route('dokumen.update', $dokumen->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
+
                             <input type="hidden" name="kriteria_id" value="{{ $dokumen->kriteria_id }}">
 
                             <div class="mb-3">
                                 <label for="judul" class="form-label">Judul Dokumen</label>
-                                <input type="text" name="judul" class="form-control" value="{{ $dokumen->judul }}" required>
+                                <input type="text" name="judul" id="judul" class="form-control" value="{{ old('judul', $dokumen->judul) }}" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="deskripsi" class="form-label">Deskripsi Dokumen</label>
-                                <textarea name="deskripsi" class="form-control" rows="4" required>{{ $dokumen->deskripsi }}</textarea>
+                                <textarea name="deskripsi" id="deskripsi" class="form-control" rows="4" required>{{ old('deskripsi', $dokumen->deskripsi) }}</textarea>
                             </div>
 
                             <div class="mb-3">
@@ -58,13 +59,24 @@
 
                             <div class="mb-3">
                                 <label for="link" class="form-label">Link Dokumen (Opsional)</label>
-                                <input type="url" name="link" class="form-control" value="{{ $dokumen->link }}" placeholder="https://contoh.com/dokumen">
+                                <input type="url" name="link" id="link" class="form-control" value="{{ old('link', $dokumen->link) }}" placeholder="https://contoh.com/dokumen">
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <a href="{{ url('/kriteria/kriteria.blade.php') }}" class="btn btn-secondary">Kembali</a>
-                                <button type="submit" class="btn btn-warning">Update</button>
-                            </div>
+    <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
+
+    <div>
+        <button type="submit" name="action" value="save" class="btn btn-info me-2">
+            Save
+        </button>
+
+        <button type="submit" name="action" value="submit" class="btn btn-warning">
+            Submit
+        </button>
+    </div>
+</div>
+<input type="hidden" name="redirect_url" value="{{ url()->previous() }}">
+
                         </form>
 
                     @else

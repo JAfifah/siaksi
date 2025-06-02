@@ -171,7 +171,7 @@
                         <p class="mb-1">{{ $activity->description }}</p>
                         <small>
                             <i class="fas fa-file-alt mr-1"></i>
-                            {{ $activity->document->title ?? 'Dokumen' }}
+                            {{ $activity->document->judul ?? 'Dokumen' }}
                         </small>
                     </div>
                 @empty

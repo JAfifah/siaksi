@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
+
+            // Foreign key user_id ke users.id dengan onDelete cascade
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('document_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('type')->default('comment'); // Type of activity
-            $table->text('description'); // The comment content or activity description
+
+            // Foreign key komentar_id ke komentars.id dengan onDelete cascade
+            $table->foreignId('komentar_id')->constrained('komentars')->onDelete('cascade');
+
+            $table->string('type')->default('comment'); // Tipe aktivitas
+            $table->text('description'); // Deskripsi aktivitas (isi komentar)
             $table->string('action')->default('created'); // created, updated, deleted
-            $table->boolean('is_read')->default(false); // Track if notification is read
+            $table->boolean('is_read')->default(false); // Penanda apakah sudah dibaca
+
             $table->timestamps();
         });
     }
