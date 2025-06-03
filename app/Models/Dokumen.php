@@ -18,22 +18,27 @@ class Dokumen extends Model
         'status',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function kriteria()
     {
         return $this->belongsTo(Kriteria::class);
     }
-    
+
     public function komentars()
     {
         return $this->hasMany(Komentar::class, 'dokumen_id', 'id');
     }
 
     public function validasi($id)
-{
-    $dokumen = Dokumen::with('kriteria')->find($id); // <--- ini penting!
+    {
+        $dokumen = Dokumen::with('kriteria')->find($id); // <--- ini penting!
 
-    return view('kriteria.validasi', compact('dokumen'));
-}
+        return view('kriteria.validasi', compact('dokumen'));
+    }
 
 
     protected $table = 'dokumen';
