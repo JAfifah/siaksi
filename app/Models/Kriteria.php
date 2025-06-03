@@ -8,11 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Kriteria extends Model
 {
     use HasFactory;
+
     protected $table = 'kriteria';
-    protected $fillable = ['nama'];
+
+    // Tambahkan 'tahap' dan 'nomor' ke fillable
+    protected $fillable = ['nama', 'tahap', 'nomor'];
+
     public function dokumen()
-{
-    return $this->hasOne(Dokumen::class);
+    {
+        return $this->hasOne(Dokumen::class);
+    }
 }
 
-}

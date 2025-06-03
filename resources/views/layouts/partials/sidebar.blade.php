@@ -48,6 +48,12 @@
                             'childs' => [],
                         ],
                         (object) [
+                            'icon' => 'fas fa-list',
+                            'name' => 'Buat Dokumen',
+                            'link' => '/template',
+                            'childs' => [],
+                        ],
+                        (object) [
                             'title' => 'KRITERIA',
                         ],
                         (object) [

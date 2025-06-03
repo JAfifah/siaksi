@@ -13,19 +13,19 @@ class Komentar extends Model
     protected $fillable = [
         'dokumen_id', // ID dokumen yang dikomentari
         'user_id',    // ID pengguna yang memberikan komentar
-        'komentar',   // Isi komentar
-        'table',      // Nama tabel yang dikomentari (dari versi lain)
-        'isi',        // Isi komentar (alternatif atau tambahan)
-        'page',       // Halaman atau nomor kriteria
+        'komentar',   // Isi komentar (jika ada, bisa dihapus jika tidak pakai)
+        'table',      // Nama tabel yang dikomentari (optional, bisa dihapus jika tidak pakai)
+        'isi',        // Isi komentar utama
+        'page',       // Halaman atau nomor kriteria (optional)
     ];
 
-    // Relasi ke tabel dokumen (jika diperlukan)
+    // Relasi ke dokumen
     public function dokumen()
     {
         return $this->belongsTo(Dokumen::class);
     }
 
-    // Relasi ke tabel user
+    // Relasi ke user
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
