@@ -7,6 +7,8 @@ use App\Models\Dokumen;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Kriteria;
 use App\Models\Komentar;
+use App\Notifications\DocumentNotification;
+use App\Models\User;
 
 class DokumenController extends Controller
 {
@@ -54,14 +56,25 @@ class DokumenController extends Controller
         }
 
         // Menyimpan dokumen ke database
-        Dokumen::create([
+        $dokumen = Dokumen::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'file_path' => $filePath,
             'user_id' => auth()->id(),
             'kriteria_id' => $request->kriteria_id,
-            'status'=>'dikirim',
+            'status' => 'dikirim',
         ]);
+
+        // Notify relevant users (e.g., admins)
+        $admins = User::where('role', 'administrator')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new DocumentNotification([
+                'title' => 'Dokumen Baru Diupload',
+                'message' => "Dokumen baru '{$request->judul}' telah diunggah",
+                'action_url' => route('kriteria.lihat', $dokumen->kriteria_id),
+                'document_id' => $dokumen->id
+            ]));
+        }
 
         return redirect()->back()->with('success', 'Dokumen berhasil diupload.');
     }
@@ -118,7 +131,7 @@ class DokumenController extends Controller
             'deskripsi' => $request->deskripsi,
             'file_path' => $filePath,
             'kriteria_id' => $request->kriteria_id,
-            'status'=>'dikirim',
+            'status' => 'dikirim',
         ]);
 
         return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
@@ -126,8 +139,12 @@ class DokumenController extends Controller
 
     public function showDokumen($id)
     {
-        $dokumen = Dokumen::with('kriteria')->find($id);
-        return view('kriteria.lihat', compact('dokumen'));
+        $kriteria = Kriteria::findOrFail($id);
+        $documents = Dokumen::where('kriteria_id', $id)->with(['komentars.user'])->get();
+        $kriterias = $kriteria; // Keep this for backward compatibility
+
+        return view('kriteria.lihat', compact('documents', 'kriterias'));
+
     }
 
     public function validasi($id)
@@ -160,6 +177,14 @@ class DokumenController extends Controller
             ]);
         }
 
+        // Notify document owner (kembalikan)
+        $dokumen->user->notify(new DocumentNotification([
+            'title' => 'Dokumen Dikembalikan',
+            'message' => "Dokumen Anda '{$dokumen->judul}' telah dikembalikan untuk revisi",
+            'action_url' => route('dokumen.edit', $dokumen->id),
+            'document_id' => $dokumen->id
+        ]));
+
         return redirect()->back()->with('success', 'Dokumen berhasil dikembalikan.');
     }
 
@@ -168,6 +193,14 @@ class DokumenController extends Controller
         $dokumen = Dokumen::findOrFail($id);
         $dokumen->status = 'disetujui';
         $dokumen->save();
+
+        // Notify document owner (setujui)
+        $dokumen->user->notify(new DocumentNotification([
+            'title' => 'Dokumen Disetujui',
+            'message' => "Dokumen Anda '{$dokumen->judul}' telah disetujui",
+            'action_url' => route('dokumen.lihat', $dokumen->id),
+            'document_id' => $dokumen->id
+        ]));
 
         return redirect()->back()->with('success', 'Dokumen berhasil disetujui.');
     }

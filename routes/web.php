@@ -10,6 +10,7 @@ use App\Http\Controllers\DocumentOutController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,6 +56,13 @@ Route::middleware('auth')->group(function () {
     # Profile Page
     Route::get('/profil-akun', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profil-akun', [ProfileController::class, 'update'])->name('profile.update');
+
+    # Notification routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::get('/notifications/count', [NotificationController::class, 'getCount'])->name('notifications.count');
 });
 
 # Halaman Beranda
