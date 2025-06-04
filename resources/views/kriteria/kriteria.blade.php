@@ -103,7 +103,7 @@
             {{-- Tombol tambah kriteria hanya untuk administrator dan anggota --}}
             @if (in_array(auth()->user()->role, ['administrator', 'anggota']))
                 <a href="{{ route('kriteria.create', ['tahap' => $tahap, 'nomor' => $nomor]) }}" class="btn btn-sm btn-primary">
-                    <i class="fas fa-plus"></i> Tambah Kriteria
+                    <i class="fas fa-plus"></i> Tambah Dokumen
                 </a>
             @endif
         </div>
