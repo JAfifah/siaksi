@@ -102,7 +102,7 @@
 
     <!-- Features Section -->
     <div class="row mt-4">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-header border-0">
                     <h3 class="card-title">Denah Gedung</h3>
@@ -146,43 +146,6 @@
                 </div>
             </div>
         </div>
-
-<div class="col-lg-4">
-    <div class="card">
-        <div class="card-header border-0 d-flex align-items-center">
-            <h3 class="card-title">
-                <i class="fas fa-bell mr-2"></i>Aktivitas Terbaru
-            </h3>
-            <span class="badge badge-primary ml-auto">{{ $activities->count() }}</span>
-        </div>
-        <div class="card-body p-0">
-            <div class="list-group list-group-flush">
-                @forelse($activities as $activity)
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1">
-                                <i class="fas fa-user-circle mr-1"></i>
-                                {{ $activity->user->name }}
-                            </h6>
-                            <small class="text-muted">
-                                {{ $activity->created_at->diffForHumans() }}
-                            </small>
-                        </div>
-                        <p class="mb-1">{{ $activity->description }}</p>
-                        <small>
-                            <i class="fas fa-file-alt mr-1"></i>
-                            {{ $activity->document->judul ?? 'Dokumen' }}
-                        </small>
-                    </div>
-                @empty
-                    <div class="list-group-item text-center text-muted">
-                        Belum ada aktivitas terbaru
-                    </div>
-                @endforelse
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @push('scripts')
