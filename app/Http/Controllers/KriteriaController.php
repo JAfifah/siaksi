@@ -44,9 +44,12 @@ class KriteriaController extends Controller
 
         logger()->info('Dokumen ditemukan:', $documents->toArray());
 
+        // Tambahkan variabel $nomor agar tersedia di view
         return view('kriteria.lihat', [
             'kriterias' => $kriteria,
+            'tahap' => $kriteria->tahap,
             'documents' => $documents,
+            'nomor' => $nomor,
         ]);
     }
 
@@ -125,9 +128,14 @@ class KriteriaController extends Controller
             $dokumen->user_id = auth()->id();
 
             if ($request->hasFile('file')) {
-                $path = $request->file('file')->store('dokumen', 'public');
-                $dokumen->file_path = $path;
-            }
+    $file = $request->file('file');
+    $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+    $destinationPath = public_path('dokumen'); // simpan ke /public/dokumen
+    $file->move($destinationPath, $filename);
+    $dokumen->file_path = 'dokumen/' . $filename; // simpan path relatif
+}
+
+
 
             $dokumen->save();
 

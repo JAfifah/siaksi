@@ -64,8 +64,9 @@
                         <label class="form-label d-block">Upload File</label>
                         <label class="btn btn-outline-primary">
                             Pilih File
-                            <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png,.zip" hidden>
+                            <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png,.zip" hidden onchange="tampilkanNamaFile()">
                         </label>
+                        <span id="namaFile" class="ms-2 text-muted fst-italic"></span>
                         <div class="form-text">Format: pdf, doc, docx, jpg, png, zip. Maksimal 2MB.</div>
                     </div>
 
@@ -99,6 +100,16 @@
     function submitForm(statusValue) {
         document.getElementById('status').value = statusValue;
         document.getElementById('formKriteria').submit();
+    }
+
+    function tampilkanNamaFile() {
+        const input = document.getElementById('file');
+        const span = document.getElementById('namaFile');
+        if (input.files.length > 0) {
+            span.textContent = input.files[0].name;
+        } else {
+            span.textContent = '';
+        }
     }
 </script>
 @endsection

@@ -48,8 +48,9 @@
                                 <label for="file" class="form-label d-block">Upload File Baru (Opsional)</label>
                                 <label class="btn btn-outline-primary">
                                     Pilih File
-                                    <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.jpg,.png" hidden>
+                                    <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.jpg,.png" hidden onchange="tampilkanNamaFile()">
                                 </label>
+                                <span id="namaFile" class="ms-2 text-muted fst-italic"></span>
                                 <div class="form-text mt-1">Format: pdf, doc, docx, jpg, png. Maksimal 2MB.</div>
                             </div>
 
@@ -63,20 +64,20 @@
                             </div>
 
                             <div class="d-flex justify-content-between">
-    <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
+                                <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
 
-    <div>
-        <button type="submit" name="action" value="save" class="btn btn-info me-2">
-            Save
-        </button>
+                                <div>
+                                    <button type="submit" name="action" value="save" class="btn btn-info me-2">
+                                        Save
+                                    </button>
 
-        <button type="submit" name="action" value="submit" class="btn btn-warning">
-            Submit
-        </button>
-    </div>
-</div>
-<input type="hidden" name="redirect_url" value="{{ url()->previous() }}">
+                                    <button type="submit" name="action" value="submit" class="btn btn-warning">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
 
+                            <input type="hidden" name="redirect_url" value="{{ url()->previous() }}">
                         </form>
 
                     @else
@@ -91,4 +92,17 @@
         </div>
     </div>
 </div>
+
+{{-- Script tampilkan nama file --}}
+<script>
+    function tampilkanNamaFile() {
+        const input = document.getElementById('file');
+        const span = document.getElementById('namaFile');
+        if (input.files.length > 0) {
+            span.textContent = input.files[0].name;
+        } else {
+            span.textContent = '';
+        }
+    }
+</script>
 @endsection

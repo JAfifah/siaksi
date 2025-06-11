@@ -6,8 +6,6 @@
 
     @php
         $tahapan = ['penetapan', 'pelaksanaan', 'evaluasi', 'pengendalian', 'peningkatan'];
-
-        // Cek apakah semua dokumen dari semua kriteria sudah disetujui
         $semuaDisetujui = true;
         $sudahFinalisasi = false;
 
@@ -16,14 +14,12 @@
             if (!$dok || $dok->status !== 'disetujui') {
                 $semuaDisetujui = false;
             }
-
             if ($kriteria->finalisasi_disetujui ?? false) {
                 $sudahFinalisasi = true;
             }
         }
     @endphp
 
-    {{-- Notifikasi jika sudah finalisasi --}}
     @if ($sudahFinalisasi)
         <div class="alert alert-info">
             <i class="fas fa-check-circle"></i> Kriteria ini sudah difinalisasi.
@@ -84,7 +80,7 @@
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>
                                             @else
-                                                <a href="{{ route('kriteria.lihat', ['nomor' => $nomor, 'id' => $dokumenKriteria->id]) }}" class="btn btn-info btn-sm">
+                                                <a href="{{ route('dokumen.lihat', $dokumenKriteria->kriteria_id) }}" class="btn btn-primary btn-sm">
                                                     <i class="fas fa-eye"></i> Lihat
                                                 </a>
                                             @endif
@@ -137,7 +133,6 @@
         </div>
     @endforeach
 
-    {{-- Finalisasi --}}
     @if (in_array(auth()->user()->role, ['administrator', 'koordinator']))
         <div class="text-end mt-4">
             @if ($sudahFinalisasi)
@@ -158,7 +153,6 @@
         </div>
     @endif
 
-    {{-- Validasi Error --}}
     @if ($errors->any())
         <div class="alert alert-danger mt-2">
             <ul class="mb-0">
@@ -169,7 +163,6 @@
         </div>
     @endif
 
-    {{-- Notifikasi sukses --}}
     @if (session('success'))
         <div class="alert alert-success mt-2">
             <i class="fas fa-check-circle"></i> {{ session('success') }}
