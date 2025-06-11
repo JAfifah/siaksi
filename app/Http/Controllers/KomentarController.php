@@ -16,8 +16,8 @@ class KomentarController extends Controller
         // Validasi input dari form
         $validated = $request->validate([
             'dokumen_id' => 'required|exists:dokumen,id',
-            'isi' => 'required|string|max:1000', // Ganti dari 'komentar' menjadi 'isi'
-            'page' => 'nullable|integer', // Untuk melacak asal halaman, opsional
+            'isi' => 'required|string|max:1000', 
+            'page' => 'nullable|integer', 
         ]);
 
         // Hanya admin, kajur, kps, dan direktur yang boleh komentar

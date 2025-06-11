@@ -30,19 +30,34 @@
                     <div>: {{ $dokumen->created_at->format('d M Y H:i') }}</div>
                 </div>
 
+                {{-- Tampilkan file jika ada --}}
                 @if ($dokumen->file_path)
                     <div class="mb-2 d-flex">
                         <div style="width: 150px;"><strong>File</strong></div>
                         <div>:
                             @if (filter_var($dokumen->file_path, FILTER_VALIDATE_URL))
-                                <a href="{{ $dokumen->file_path }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat Link</a>
+                                <a href="{{ $dokumen->file_path }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat Link File</a>
                             @else
                                 <a href="{{ asset('dokumen/' . $dokumen->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
                             @endif
                         </div>
                     </div>
-                @else
-                    <p class="text-danger">File tidak tersedia.</p>
+                @endif
+
+                {{-- Tambahan: tampilkan link jika ada --}}
+                @if (!empty($dokumen->link))
+                    <div class="mb-2 d-flex">
+                        <div style="width: 150px;"><strong>Link Tambahan</strong></div>
+                        <div>: 
+                            <a href="{{ $dokumen->link }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                Kunjungi Link
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
+                @if (empty($dokumen->file_path) && empty($dokumen->link))
+                    <p class="text-danger">File atau link tidak tersedia.</p>
                 @endif
 
                 {{-- Warning jika sudah disetujui atau dikembalikan --}}
@@ -61,7 +76,7 @@
                     </div>
                 @else
                     {{-- Validasi hanya untuk administrator, koordinator, dan direktur --}}
-                    @if (in_array(auth()->user()->role, ['administrator', 'koordinator', 'direktur']))
+                    @if (in_array(auth()->user()->role, ['administrator', 'koordinator']))
                         <div class="d-flex gap-2 mt-3">
                             {{-- Form Kembalikan --}}
                             <form action="{{ route('dokumen.kembalikan', $dokumen->id) }}" method="POST" class="flex-grow-1">

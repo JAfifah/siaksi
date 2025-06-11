@@ -2,7 +2,7 @@
 
 @section('main-content')
 <div class="container mt-5">
-    <h2>Tambah Kriteria & Upload Dokumen</h2>
+    <h2>Upload Dokumen Kriteria {{ $nomor }} {{ ucfirst($tahap) }}</h2>
 
     {{-- Alert sukses upload --}}
     @if (session('success'))
@@ -19,9 +19,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-
-    <p>Tahap: <strong>{{ $tahap }}</strong></p>
-    <p>Nomor: <strong>{{ $nomor }}</strong></p>
 
     @if (in_array(auth()->user()->role, ['anggota', 'administrator']))
         {{-- Tampilkan error validasi --}}
@@ -77,7 +74,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="link" class="form-label">Link Dokumen (Opsional)</label>
+                        <label for="link" class="form-label">Link Dokumen</label>
                         <input type="url" id="link" name="link" class="form-control" placeholder="https://contoh.com/dokumen" value="{{ old('link') }}">
                         <div class="form-text">Isi salah satu: file <em>atau</em> link.</div>
                     </div>
@@ -85,13 +82,9 @@
             </div>
 
             {{-- Tombol --}}
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-start gap-2">
                 <a href="{{ url()->previous() }}" class="btn btn-secondary">Kembali</a>
-
-                <div>
-                    <button type="button" class="btn btn-warning me-2" onclick="submitForm('')">Save (Draft)</button>
-                    <button type="button" class="btn btn-success" onclick="submitForm('dikirim')">Submit</button>
-                </div>
+                <button type="button" class="btn btn-success" onclick="submitForm('dikirim')">Submit</button>
             </div>
         </form>
     @else

@@ -3,83 +3,89 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Dokumen;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Dokumen;
 use App\Models\Kriteria;
 use App\Models\Komentar;
-use App\Notifications\DocumentNotification;
 use App\Models\User;
+use App\Notifications\DocumentNotification;
 
 class DokumenController extends Controller
 {
     public function create()
     {
-        // Cek role user, hanya admin dan anggota yang diizinkan
         if (!in_array(Auth::user()->role, ['administrator', 'anggota'])) {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengunggah dokumen.');
         }
 
         $kriterias = Kriteria::all();
-        return view('kriteria.upload', compact('kriterias'));
+        return view('kriteria.create', compact('kriterias'));
+    }
+
+    public function createTemplate()
+    {
+        if (!in_array(Auth::user()->role, ['administrator', 'anggota'])) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin.');
+        }
+
+        $kriterias = Kriteria::all();
+        return view('kriteria.template', compact('kriterias'));
     }
 
     public function store(Request $request)
     {
-        // Cek role user, hanya admin dan anggota yang diizinkan
         if (!in_array(Auth::user()->role, ['administrator', 'anggota'])) {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengunggah dokumen.');
         }
 
-        // Validasi awal
         $request->validate([
             'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
+            'deskripsi' => 'nullable|string',
+            'isi' => 'nullable|string',
             'kriteria_id' => 'required|exists:kriteria,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
             'link' => 'nullable|url',
         ]);
 
-        // Validasi minimal salah satu harus diisi
-        if (!$request->hasFile('file') && !$request->link) {
-            return redirect()->back()->withErrors(['file' => 'Harap unggah file atau isi link.'])->withInput();
+        if (empty($request->isi) && !$request->hasFile('file') && !$request->link) {
+            return redirect()->back()->withErrors(['file' => 'Harap isi konten, unggah file, atau isi link.'])->withInput();
         }
 
         $filePath = null;
-
         if ($request->hasFile('file')) {
             $uploadedFile = $request->file('file');
             $filename = time() . '_' . $uploadedFile->getClientOriginalName();
             $uploadedFile->move(public_path('dokumen'), $filename);
             $filePath = $filename;
-        } else {
+        } elseif ($request->link) {
             $filePath = $request->link;
         }
 
-        // ✅ Tentukan status berdasarkan tombol yang diklik
-        $status = $request->has('draft') ? 'draft' : 'dikirim';
+        $status = $request->status === 'draft' ? 'draft' : 'dikirim';
 
-        // Menyimpan dokumen ke database
         $dokumen = Dokumen::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
+            'konten' => $request->isi,
             'file_path' => $filePath,
             'user_id' => auth()->id(),
             'kriteria_id' => $request->kriteria_id,
             'status' => $status,
         ]);
 
-        // Notify relevant users (e.g., admins)
-        $admins = User::where('role', 'administrator')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new DocumentNotification([
-                'title' => 'Dokumen Baru Diupload',
-                'message' => "Dokumen baru '{$request->judul}' telah diunggah",
-                'action_url' => route('kriteria.lihat', $dokumen->kriteria_id),
-                'document_id' => $dokumen->id
-            ]));
+        if ($status === 'dikirim') {
+            $admins = User::where('role', 'administrator')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new DocumentNotification([
+                    'title' => 'Dokumen Baru Diupload',
+                    'message' => "Dokumen baru '{$request->judul}' telah diunggah",
+                    'action_url' => route('kriteria.lihat', $dokumen->kriteria_id),
+                    'document_id' => $dokumen->id
+                ]));
+            }
         }
 
-        return redirect()->back()->with('success', 'Dokumen berhasil diupload.');
+        return redirect()->back()->with('success', 'Dokumen berhasil disimpan.');
     }
 
     public function edit($id)
@@ -90,29 +96,26 @@ class DokumenController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Cari dokumen berdasarkan ID
         $dokumen = Dokumen::findOrFail($id);
 
-        // Validasi input
         $request->validate([
             'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
+            'deskripsi' => 'nullable|string',
+            'isi' => 'nullable|string',
             'kriteria_id' => 'required|exists:kriteria,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,png,zip|max:4096',
             'link' => 'nullable|url',
         ]);
 
-        // Validasi minimal salah satu harus diisi (file baru, link, atau file lama masih ada)
-        if (!$request->hasFile('file') && !$request->link && !$dokumen->file_path) {
+        if (empty($request->isi) && !$request->hasFile('file') && !$request->link && !$dokumen->file_path) {
             return redirect()->back()
-                ->withErrors(['file' => 'Harap unggah file atau isi link.'])
+                ->withErrors(['file' => 'Harap isi konten, unggah file, atau isi link.'])
                 ->withInput();
         }
 
         $filePath = $dokumen->file_path;
 
         if ($request->hasFile('file')) {
-            // Hapus file lama jika sebelumnya adalah file (bukan link)
             if ($dokumen->file_path && !filter_var($dokumen->file_path, FILTER_VALIDATE_URL)) {
                 $oldFile = public_path('dokumen/' . $dokumen->file_path);
                 if (file_exists($oldFile)) {
@@ -120,35 +123,26 @@ class DokumenController extends Controller
                 }
             }
 
-            // Simpan file baru
             $uploadedFile = $request->file('file');
             $filename = time() . '_' . $uploadedFile->getClientOriginalName();
             $uploadedFile->move(public_path('dokumen'), $filename);
             $filePath = $filename;
         } elseif ($request->link) {
-            // Jika hanya link yang diisi
             $filePath = $request->link;
         }
 
-        // Tentukan status berdasarkan tombol yang diklik (action)
-        $status = null;
-        if ($request->input('action') === 'submit') {
-            $status = 'dikirim';
-        } elseif ($request->input('action') === 'save') {
-            $status = null;
-        }
+        $status = $request->input('action') === 'submit' ? 'dikirim' : ($request->input('action') === 'save' ? 'draft' : $dokumen->status);
 
-        // Update dokumen
         $dokumen->update([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
+            'konten' => $request->isi,
             'file_path' => $filePath,
             'kriteria_id' => $request->kriteria_id,
             'status' => $status,
         ]);
 
-        $redirectUrl = $request->input('redirect_url', url('/')); // fallback ke homepage kalau kosong
-
+        $redirectUrl = $request->input('redirect_url', url('/'));
         return redirect($redirectUrl)->with('success', 'Dokumen berhasil diperbarui.');
     }
 
@@ -156,16 +150,14 @@ class DokumenController extends Controller
     {
         $kriteria = Kriteria::findOrFail($id);
         $documents = Dokumen::where('kriteria_id', $id)->with(['komentars.user'])->get();
-        $kriterias = $kriteria; // Keep this for backward compatibility
+        $kriterias = $kriteria;
 
         return view('kriteria.lihat', compact('documents', 'kriterias'));
-
     }
 
     public function validasi($id)
     {
-        // Load dokumen, relasi kriteria dan komentar beserta user komentarnya
-        $dokumen = Dokumen::with(['kriteria', 'komentars.user'])->find($id);
+        $dokumen = Dokumen::with(['kriteria', 'komentars.user'])->findOrFail($id);
         return view('kriteria.validasi', compact('dokumen'));
     }
 
@@ -173,17 +165,14 @@ class DokumenController extends Controller
     {
         $dokumen = Dokumen::findOrFail($id);
 
-        // Validasi komentar (optional)
         $request->validate([
             'komentar' => 'nullable|string',
         ]);
 
-        // Logika pengembalian dokumen, misalnya update status dan simpan komentar
         $dokumen->status = 'dikembalikan';
         $dokumen->komentar_pengembalian = $request->komentar;
         $dokumen->save();
 
-        // Simpan komentar juga ke tabel komentar (opsional)
         if ($request->filled('komentar')) {
             Komentar::create([
                 'user_id' => Auth::id(),
@@ -192,7 +181,6 @@ class DokumenController extends Controller
             ]);
         }
 
-        // Notify document owner (kembalikan)
         $dokumen->user->notify(new DocumentNotification([
             'title' => 'Dokumen Dikembalikan',
             'message' => "Dokumen Anda '{$dokumen->judul}' telah dikembalikan untuk revisi",
@@ -209,7 +197,6 @@ class DokumenController extends Controller
         $dokumen->status = 'disetujui';
         $dokumen->save();
 
-        // Notify document owner (setujui)
         $dokumen->user->notify(new DocumentNotification([
             'title' => 'Dokumen Disetujui',
             'message' => "Dokumen Anda '{$dokumen->judul}' telah disetujui",
@@ -219,4 +206,53 @@ class DokumenController extends Controller
 
         return redirect()->back()->with('success', 'Dokumen berhasil disetujui.');
     }
+
+    public function createFromTemplate()
+    {
+        $kriterias = Kriteria::all();
+        return view('dokumen.create', compact('kriterias'));
+    }
+
+    public function destroy($kriteriaId)
+    {
+        $dokumen = Dokumen::where('kriteria_id', $kriteriaId)->first();
+        if ($dokumen) {
+            $dokumen->delete();
+        }
+
+        $kriteria = Kriteria::find($kriteriaId);
+        if ($kriteria) {
+            $kriteria->delete();
+        }
+
+        return redirect()->back()->with('success', 'Dokumen dan kriteria berhasil dihapus.');
+    }
+
+   public function storeFromTemplate(Request $request)
+{
+    $request->validate([
+        'judul' => 'required|string|max:255',
+        'deskripsi' => 'required|string',
+        'konten' => 'required|string',
+        'tahap' => 'required|string',
+        'kriteria_id' => 'required|integer',
+        'status' => 'required|in:draft,dikirim',
+    ]);
+
+    $dokumen = Dokumen::create([
+        'judul' => $request->judul,
+        'deskripsi' => $request->deskripsi,
+        'konten' => $request->konten,
+        'tahap' => $request->tahap,
+        'kriteria_id' => $request->kriteria_id,
+        'status' => $request->status,
+        'user_id' => auth()->id(),
+    ]);
+
+    return response()->json([
+        'message' => 'Dokumen berhasil disimpan!',
+        'redirect' => route('kriteria.index') 
+    ]);
+}
+
 }

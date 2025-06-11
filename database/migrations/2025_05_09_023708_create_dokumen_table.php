@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->string('deskripsi');
-            $table->string('file_path'); // Menambahkan kolom file_path
-            $table->foreignId('kriteria_id')->constrained('kriteria'); // sesuaikan jika nama tabel kriteria berbeda
-            $table->foreignId('user_id')->constrained('users'); // Menambahkan kolom user_id yang merujuk ke tabel users
-            $table->string('status')->nullable();
+            $table->text('isi')->nullable(); // isi dokumen opsional
+            $table->string('file_path')->nullable(); // path file opsional
+            $table->foreignId('kriteria_id')->constrained('kriteria'); // FK ke tabel kriteria (pastikan tabel kriteria)
+            $table->string('tahap'); // kolom tahap, wajib diisi
+            $table->foreignId('user_id')->constrained('users'); // FK ke user pembuat
+            $table->string('status')->nullable(); // status dokumen, bisa 'draft', 'dikirim', dll.
+            $table->string('link')->nullable(); // tambahkan kolom link jika kamu pakai
             $table->timestamps();
         });
     }

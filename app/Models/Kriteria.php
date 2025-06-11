@@ -16,7 +16,7 @@ class Kriteria extends Model
 
     public function dokumen()
     {
-        return $this->hasOne(Dokumen::class);
+        return $this->hasMany(Dokumen::class);
     }
 }
 

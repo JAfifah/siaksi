@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('kriteria')) {
-            Schema::table('kriteria', function (Blueprint $table) {
-                $table->text('tahap')->after('id');
-                $table->integer('nomor')->after('tahap');
-            });
-        }
+        Schema::create('kriteria', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama'); // Kolom untuk nama kriteria
+            $table->text('tahap'); // Kolom tahapan
+            $table->integer('nomor'); // Nomor urut
+            $table->boolean('finalisasi_dikirim')->default(false); // Status pengiriman finalisasi
+            $table->boolean('finalisasi_disetujui')->default(false); // Status persetujuan direktur
+            $table->timestamps(); // created_at dan updated_at
+        });
     }
 
     /**
@@ -24,10 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasTable('kriteria')) {
-            Schema::table('kriteria', function (Blueprint $table) {
-                $table->dropColumn(['tahap', 'nomor']);
-            });
-        }
+        Schema::dropIfExists('kriteria');
     }
 };
