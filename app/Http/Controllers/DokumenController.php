@@ -68,7 +68,7 @@ class DokumenController extends Controller
         $dokumen = Dokumen::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
-            'konten' => $request->isi,
+            'isi' => $request->isi,
             'file_path' => $filePath,
             'user_id' => auth()->id(),
             'kriteria_id' => $request->kriteria_id,
@@ -233,7 +233,7 @@ class DokumenController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'konten' => 'required|string',
+            'isi' => 'required|string',
             'tahap' => 'required|string',
             'kriteria_id' => 'required|integer',
             'status' => 'required|in:draft,dikirim',
@@ -242,7 +242,7 @@ class DokumenController extends Controller
         $dokumen = Dokumen::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
-            'konten' => $request->konten,
+            'isi' => $request->isi,
             'tahap' => $request->tahap,
             'kriteria_id' => $request->kriteria_id,
             'status' => $request->status,

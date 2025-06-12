@@ -69,8 +69,8 @@
 
         {{-- Isi Dokumen --}}
         <div class="mb-3">
-            <label for="konten" class="form-label">Isi Dokumen</label>
-            <textarea name="konten" id="konten" class="form-control" rows="10">{{ old('konten') }}</textarea>
+            <label for="isi" class="form-label">Isi Dokumen</label>
+            <textarea name="isi" id="isi" class="form-control" rows="10">{{ old('isi') }}</textarea>
         </div>
 
         {{-- Tombol --}}
@@ -84,7 +84,7 @@
 <script src="/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     tinymce.init({
-        selector: '#konten',
+        selector: '#isi',
         height: 400,
         menubar: false,
         plugins: 'lists link image table code help wordcount',
@@ -122,7 +122,7 @@
         const message = data.message || 'Dokumen berhasil disimpan.';
         alertContainer.innerHTML = `<div class="alert alert-success"><i class="fas fa-check-circle"></i> ${message}</div>`;
         form.reset();
-        tinymce.get('konten').setContent('');
+        tinymce.get('isi').setContent('');
 
         if (data.redirect) {
             window.location.href = data.redirect;
