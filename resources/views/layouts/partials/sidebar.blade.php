@@ -47,46 +47,52 @@
                         'link' => '/denah',
                         'childs' => [],
                     ],
-                    (object) [
+                ];
+
+                // Tambahkan menu "Buat Dokumen" hanya untuk anggota atau administrator
+                if (Auth::check() && in_array(Auth::user()->role, ['anggota', 'administrator'])) {
+                    $menus[] = (object) [
                         'icon' => 'fas fa-list',
                         'name' => 'Buat Dokumen',
                         'link' => '/template',
                         'childs' => [],
+                    ];
+                }
+
+                $menus[] = (object) [
+                    'title' => 'KRITERIA',
+                ];
+                $menus[] = (object) [
+                    'icon' => 'fas fa-book',
+                    'name' => 'Kriteria',
+                    'childs' => [
+                        (object) ['name' => 'Kriteria 1', 'link' => '/kriteria/1'],
+                        (object) ['name' => 'Kriteria 2', 'link' => '/kriteria/2'],
+                        (object) ['name' => 'Kriteria 3', 'link' => '/kriteria/3'],
+                        (object) ['name' => 'Kriteria 4', 'link' => '/kriteria/4'],
+                        (object) ['name' => 'Kriteria 5', 'link' => '/kriteria/5'],
+                        (object) ['name' => 'Kriteria 6', 'link' => '/kriteria/6'],
+                        (object) ['name' => 'Kriteria 7', 'link' => '/kriteria/7'],
+                        (object) ['name' => 'Kriteria 8', 'link' => '/kriteria/8'],
+                        (object) ['name' => 'Kriteria 9', 'link' => '/kriteria/9'],
                     ],
-                    (object) [
-                        'title' => 'KRITERIA',
-                    ],
-                    (object) [
-                        'icon' => 'fas fa-book',
-                        'name' => 'Kriteria',
-                        'childs' => [
-                            (object) ['name' => 'Kriteria 1', 'link' => '/kriteria/1'],
-                            (object) ['name' => 'Kriteria 2', 'link' => '/kriteria/2'],
-                            (object) ['name' => 'Kriteria 3', 'link' => '/kriteria/3'],
-                            (object) ['name' => 'Kriteria 4', 'link' => '/kriteria/4'],
-                            (object) ['name' => 'Kriteria 5', 'link' => '/kriteria/5'],
-                            (object) ['name' => 'Kriteria 6', 'link' => '/kriteria/6'],
-                            (object) ['name' => 'Kriteria 7', 'link' => '/kriteria/7'],
-                            (object) ['name' => 'Kriteria 8', 'link' => '/kriteria/8'],
-                            (object) ['name' => 'Kriteria 9', 'link' => '/kriteria/9'],
-                        ],
-                    ],
-                    // 👉 Tambahkan item finalisasi di bawah daftar kriteria
-                    (object) [
-                        'icon' => 'fas fa-check-circle',
-                        'name' => 'Finalisasi',
-                        'link' => '/finalisasi',
-                        'childs' => [],
-                    ],
-                    (object) [
-                        'title' => 'AKUN PENGGUNA',
-                    ],
-                    (object) [
-                        'icon' => 'fas fa-user',
-                        'name' => 'Profil Akun',
-                        'link' => '/profil-akun',
-                        'childs' => [],
-                    ],
+                ];
+
+                $menus[] = (object) [
+                    'icon' => 'fas fa-check-circle',
+                    'name' => 'Finalisasi',
+                    'link' => '/finalisasi',
+                    'childs' => [],
+                ];
+
+                $menus[] = (object) [
+                    'title' => 'AKUN PENGGUNA',
+                ];
+                $menus[] = (object) [
+                    'icon' => 'fas fa-user',
+                    'name' => 'Profil Akun',
+                    'link' => '/profil-akun',
+                    'childs' => [],
                 ];
             @endphp
 

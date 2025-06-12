@@ -31,7 +31,7 @@ class FinalisasiController extends Controller
     // Admin mengirim finalisasi ke direktur
     public function kirim($nomor)
     {
-        if (!in_array(Auth::user()->role, ['administrator'])) {
+        if (!in_array(Auth::user()->role, ['administrator', 'koordinator'])) {
             abort(403, 'Anda tidak memiliki akses untuk mengirim finalisasi.');
         }
 
