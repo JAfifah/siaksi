@@ -143,3 +143,5 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/kriteria', [KriteriaController::class, 'index'])->name('kriteria.index');
 Route::get('/kriteria/{nomor}/dokumen/{id}', [KriteriaController::class, 'lihat'])->name('kriteria.lihat');
+Route::get('/lihat/{id}', [DokumenController::class, 'showDokumen'])->name('dokumen.lihat');
+Route::post('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');

@@ -39,12 +39,12 @@
                             </thead>
                             <tbody>
                                 @foreach($kriteriaGroup as $index => $kriteria)
+                                    @php
+                                        $dokumen = $kriteria->dokumen->first(); // ambil 1 dokumen dari koleksi
+                                    @endphp
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>
-                                            @php
-                                                $dokumen = $kriteria->dokumen;
-                                            @endphp
                                             @if ($dokumen && $dokumen->judul)
                                                 {{ $dokumen->judul }}
                                             @else
@@ -60,7 +60,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($dokumen)
+                                            @if ($dokumen && $dokumen->file_path)
                                                 <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank">
                                                     Lihat Dokumen
                                                 </a>
