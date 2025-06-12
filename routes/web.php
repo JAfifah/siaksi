@@ -12,7 +12,7 @@ use App\Http\Controllers\DocumentOutController;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\DokumenController;
-use App\Http\Controllers\FinalisasiController; // ✅ Tambahan: Controller untuk finalisasi
+use App\Http\Controllers\FinalisasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ Route::middleware('auth')->group(function () {
     # Dokumen
     # ========================
     Route::get('/dokumen/create', [DokumenController::class, 'create'])->name('dokumen.create');
-    Route::post('/upload', [DokumenController::class, 'store'])->name('dokumen.store'); // atau ganti ke /dokumen jika perlu
+    Route::post('/upload', [DokumenController::class, 'store'])->name('dokumen.store');
     Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
     Route::get('/dokumen/{id}/lihat', [DokumenController::class, 'showDokumen'])->name('dokumen.lihat');
     Route::get('/dokumen/{id}/validasi', [DokumenController::class, 'validasi'])->name('dokumen.validasi');
@@ -124,7 +124,6 @@ Route::middleware('auth')->group(function () {
     # ========================
     Route::get('/template/{tahap}/{nomor}', [KriteriaController::class, 'template'])->name('template.detail');
     Route::get('/template', [KriteriaController::class, 'template'])->name('dokumen.template');
-
     Route::post('/dokumen/store-from-template', [KriteriaController::class, 'storeFromTemplate'])->name('kriteria.storeFromTemplate');
     Route::post('/dokumen/store-template', [DokumenController::class, 'storeFromTemplate'])->name('dokumen.storeFromTemplate');
 
@@ -141,6 +140,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+# ============================
+# Routes Publik (non-auth)
+# ============================
 Route::get('/kriteria', [KriteriaController::class, 'index'])->name('kriteria.index');
 Route::get('/kriteria/{nomor}/dokumen/{id}', [KriteriaController::class, 'lihat'])->name('kriteria.lihat');
 Route::get('/lihat/{id}', [DokumenController::class, 'showDokumen'])->name('dokumen.lihat');

@@ -52,11 +52,13 @@ class DokumenController extends Controller
         }
 
         $filePath = null;
+
+        // Proses upload file
         if ($request->hasFile('file')) {
             $uploadedFile = $request->file('file');
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-            $uploadedFile->move(public_path('dokumen'), $filename);
-            $filePath = $filename;
+            $namaFile = time() . '_' . $uploadedFile->getClientOriginalName();
+            $uploadedFile->move(public_path('dokumen'), $namaFile);
+            $filePath = $namaFile;
         } elseif ($request->link) {
             $filePath = $request->link;
         }
@@ -66,7 +68,7 @@ class DokumenController extends Controller
         $dokumen = Dokumen::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
-            'konten' => $request->isi,
+            'isi' => $request->isi,
             'file_path' => $filePath,
             'user_id' => auth()->id(),
             'kriteria_id' => $request->kriteria_id,
@@ -108,14 +110,13 @@ class DokumenController extends Controller
         ]);
 
         if (empty($request->isi) && !$request->hasFile('file') && !$request->link && !$dokumen->file_path) {
-            return redirect()->back()
-                ->withErrors(['file' => 'Harap isi konten, unggah file, atau isi link.'])
-                ->withInput();
+            return redirect()->back()->withErrors(['file' => 'Harap isi konten, unggah file, atau isi link.'])->withInput();
         }
 
         $filePath = $dokumen->file_path;
 
         if ($request->hasFile('file')) {
+            // Hapus file lama jika ada dan bukan URL
             if ($dokumen->file_path && !filter_var($dokumen->file_path, FILTER_VALIDATE_URL)) {
                 $oldFile = public_path('dokumen/' . $dokumen->file_path);
                 if (file_exists($oldFile)) {
@@ -124,14 +125,15 @@ class DokumenController extends Controller
             }
 
             $uploadedFile = $request->file('file');
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-            $uploadedFile->move(public_path('dokumen'), $filename);
-            $filePath = $filename;
+            $namaFile = time() . '_' . $uploadedFile->getClientOriginalName();
+            $uploadedFile->move(public_path('dokumen'), $namaFile);
+            $filePath = $namaFile;
         } elseif ($request->link) {
             $filePath = $request->link;
         }
 
-        $status = $request->input('action') === 'submit' ? 'dikirim' : ($request->input('action') === 'save' ? 'draft' : $dokumen->status);
+        $status = $request->input('action') === 'submit' ? 'dikirim' :
+                  ($request->input('action') === 'save' ? 'draft' : $dokumen->status);
 
         $dokumen->update([
             'judul' => $request->judul,
@@ -150,9 +152,7 @@ class DokumenController extends Controller
     {
         $kriteria = Kriteria::findOrFail($id);
         $documents = Dokumen::where('kriteria_id', $id)->with(['komentars.user'])->get();
-        $kriterias = $kriteria;
-
-        return view('kriteria.lihat', compact('documents', 'kriterias'));
+        return view('kriteria.lihat', compact('documents', 'kriteria'));
     }
 
     public function validasi($id)
@@ -228,31 +228,30 @@ class DokumenController extends Controller
         return redirect()->back()->with('success', 'Dokumen dan kriteria berhasil dihapus.');
     }
 
-   public function storeFromTemplate(Request $request)
-{
-    $request->validate([
-        'judul' => 'required|string|max:255',
-        'deskripsi' => 'required|string',
-        'konten' => 'required|string',
-        'tahap' => 'required|string',
-        'kriteria_id' => 'required|integer',
-        'status' => 'required|in:draft,dikirim',
-    ]);
+    public function storeFromTemplate(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'isi' => 'required|string',
+            'tahap' => 'required|string',
+            'kriteria_id' => 'required|integer',
+            'status' => 'required|in:draft,dikirim',
+        ]);
 
-    $dokumen = Dokumen::create([
-        'judul' => $request->judul,
-        'deskripsi' => $request->deskripsi,
-        'konten' => $request->konten,
-        'tahap' => $request->tahap,
-        'kriteria_id' => $request->kriteria_id,
-        'status' => $request->status,
-        'user_id' => auth()->id(),
-    ]);
+        $dokumen = Dokumen::create([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'isi' => $request->isi,
+            'tahap' => $request->tahap,
+            'kriteria_id' => $request->kriteria_id,
+            'status' => $request->status,
+            'user_id' => auth()->id(),
+        ]);
 
-    return response()->json([
-        'message' => 'Dokumen berhasil disimpan!',
-        'redirect' => route('kriteria.index') 
-    ]);
-}
-
+        return response()->json([
+            'message' => 'Dokumen berhasil disimpan!',
+            'redirect' => route('kriteria.index')
+        ]);
+    }
 }

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@php use Illuminate\Support\Str; @endphp
 
 @section('main-content')
 <div class="container">
@@ -17,82 +18,71 @@
                 <strong>{{ $dokumen->judul }}</strong>
             </div>
             <div class="card-body">
-                <div class="mb-2 d-flex">
-                    <div style="width: 150px;"><strong>Kriteria</strong></div>
-                    <div>: {{ $dokumen->kriteria->nama ?? '-' }}</div>
-                </div>
-                <div class="mb-2 d-flex">
-                    <div style="width: 150px;"><strong>Deskripsi</strong></div>
-                    <div>: {{ $dokumen->deskripsi ?? '-' }}</div>
-                </div>
-                <div class="mb-2 d-flex">
-                    <div style="width: 150px;"><strong>Tanggal Upload</strong></div>
-                    <div>: {{ $dokumen->created_at->format('d M Y H:i') }}</div>
+                {{-- Informasi Dokumen --}}
+                <div class="mb-2"><strong>Dokumen</strong> : {{ $dokumen->judul }}</div>
+                <div class="mb-2"><strong>Kriteria</strong> : {{ $dokumen->kriteria->nama ?? '-' }}</div>
+                <div class="mb-2"><strong>Deskripsi</strong> : {{ $dokumen->deskripsi ?? '-' }}</div>
+                <div class="mb-2"><strong>Tanggal Upload</strong> : {{ $dokumen->created_at->format('d M Y H:i') }}</div>
+
+                {{-- Tampilkan file/link --}}
+                <div class="mb-2">
+                    <strong>File</strong> :
+                    @php
+                        $isUrl = filter_var($dokumen->file_path, FILTER_VALIDATE_URL);
+                        $cleanFilePath = $isUrl
+                            ? $dokumen->file_path
+                            : (Str::startsWith($dokumen->file_path, 'dokumen/')
+                                ? $dokumen->file_path
+                                : 'dokumen/' . ltrim($dokumen->file_path, '/'));
+                    @endphp
+
+                    @if ($dokumen->file_path)
+                        <a href="{{ $isUrl ? $cleanFilePath : asset($cleanFilePath) }}" target="_blank" class="btn btn-sm btn-outline-primary ms-2">
+                            Lihat {{ $isUrl ? 'Link' : 'File' }}
+                        </a>
+                    @elseif (!empty($dokumen->link))
+                        <a href="{{ $dokumen->link }}" target="_blank" class="btn btn-sm btn-outline-info ms-2">
+                            Kunjungi Link
+                        </a>
+                    @else
+                        <span class="text-danger ms-2">File atau link tidak tersedia.</span>
+                    @endif
                 </div>
 
-                {{-- Tampilkan file jika ada --}}
-                @if ($dokumen->file_path)
-                    <div class="mb-2 d-flex">
-                        <div style="width: 150px;"><strong>File</strong></div>
-                        <div>:
-                            @if (filter_var($dokumen->file_path, FILTER_VALIDATE_URL))
-                                <a href="{{ $dokumen->file_path }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat Link File</a>
-                            @else
-                                <a href="{{ asset('dokumen/' . $dokumen->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
-                            @endif
-                        </div>
-                    </div>
+                {{-- Komentar Pengembalian jika ada --}}
+                @if ($dokumen->status === 'dikembalikan' && $dokumen->komentar_pengembalian)
+                    <div class="mb-2"><strong>Komentar Pengembalian</strong> : {{ $dokumen->komentar_pengembalian }}</div>
                 @endif
 
-                {{-- Tambahan: tampilkan link jika ada --}}
-                @if (!empty($dokumen->link))
-                    <div class="mb-2 d-flex">
-                        <div style="width: 150px;"><strong>Link Tambahan</strong></div>
-                        <div>: 
-                            <a href="{{ $dokumen->link }}" target="_blank" class="btn btn-sm btn-outline-info">
-                                Kunjungi Link
-                            </a>
-                        </div>
-                    </div>
-                @endif
-
-                @if (empty($dokumen->file_path) && empty($dokumen->link))
-                    <p class="text-danger">File atau link tidak tersedia.</p>
-                @endif
-
-                {{-- Warning jika sudah disetujui atau dikembalikan --}}
+                {{-- Status Dokumen --}}
                 @if ($dokumen->status === 'disetujui')
-                    <div class="alert alert-success">
+                    <div class="alert alert-success mt-3">
                         Dokumen ini telah disetujui.
                     </div>
                 @elseif ($dokumen->status === 'dikembalikan')
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning mt-3">
                         Dokumen ini telah dikembalikan.
-                        @if($dokumen->komentar_pengembalian)
-                            <hr>
-                            <p><strong>Alasan Pengembalian:</strong></p>
-                            <p>{{ $dokumen->komentar_pengembalian }}</p>
-                        @endif
                     </div>
                 @else
-                    {{-- Validasi hanya untuk administrator, koordinator, dan direktur --}}
+                    {{-- Tombol Validasi --}}
                     @if (in_array(auth()->user()->role, ['administrator', 'koordinator']))
-                        <div class="d-flex gap-2 mt-3">
-                            {{-- Form Kembalikan --}}
-                            <form action="{{ route('dokumen.kembalikan', $dokumen->id) }}" method="POST" class="flex-grow-1">
-                                @csrf
-                                <div class="mb-2">
-                                    <label for="komentar" class="form-label">Komentar Pengembalian</label>
-                                    <textarea name="komentar" id="komentar" class="form-control" rows="3" placeholder="Tulis alasan pengembalian..."></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-danger">Kembalikan Dokumen</button>
-                            </form>
+                        <div class="mt-4">
+                            <div class="mb-3">
+                                <label for="komentar" class="form-label"><strong>Komentar Pengembalian</strong></label>
+                                <form action="{{ route('dokumen.kembalikan', $dokumen->id) }}" method="POST">
+                                    @csrf
+                                    <textarea name="komentar" id="komentar" class="form-control mb-2" rows="3" placeholder="Tulis alasan pengembalian..."></textarea>
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-danger">Kembalikan Dokumen</button>
+                                </form>
 
-                            {{-- Form Setujui --}}
-                            <form action="{{ route('dokumen.setujui', $dokumen->id) }}" method="POST" class="d-flex align-items-end">
-                                @csrf
-                                <button type="submit" class="btn btn-success">Setujui Dokumen</button>
-                            </form>
+                                {{-- Form Setujui --}}
+                                <form action="{{ route('dokumen.setujui', $dokumen->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success">Setujui Dokumen</button>
+                                </form>
+                                    </div>
+                            </div>
                         </div>
                     @else
                         <div class="alert alert-danger mt-3">

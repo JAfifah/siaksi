@@ -10,8 +10,17 @@ class Dokumen extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['kriteria_id', 'judul', 'deskripsi', 'status', 'tahap', 'link', 'file_path', 'user_id'];
-
+    protected $fillable = [
+        'judul',
+        'deskripsi',
+        'kriteria_id',
+        'tahap',
+        'isi',
+        'file_path',
+        'link',
+        'status',
+        'user_id',
+    ];
 
     protected $table = 'dokumen';
 
