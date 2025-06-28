@@ -2,10 +2,6 @@
     use Illuminate\Support\Str;
 @endphp
 
-@php
-    use Illuminate\Support\Str;
-@endphp
-
 @extends('layouts.app')
 
 @section('main-content')
