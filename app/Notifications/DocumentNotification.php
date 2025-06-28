@@ -25,10 +25,11 @@ class DocumentNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => $this->data['title'],
-            'message' => $this->data['message'],
-            'action_url' => $this->data['action_url'] ?? null,
+            'title' => $this->data['title'] ?? '',
+            'message' => $this->data['message'] ?? '',
+            'action_url' => $this->data['action_url'] ?? '',
             'document_id' => $this->data['document_id'] ?? null,
+            'icon' => $this->data['icon'] ?? 'bell'
         ];
     }
 }

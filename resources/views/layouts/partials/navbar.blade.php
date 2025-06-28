@@ -13,7 +13,7 @@
     <ul class="navbar-nav ml-auto">
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown notification-dropdown">
-            <a class="nav-link notification-trigger" data-toggle="dropdown" href="#" id="notificationDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link notification-trigger" href="#" id="notificationDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <i class="far fa-bell"></i>
                 @if(auth()->user()->unreadNotifications->count() > 0)
                     <span class="badge badge-danger navbar-badge notification-badge pulse">
@@ -329,23 +329,29 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const notificationItems = document.querySelectorAll('#notificationDropdownMenu .notification-item');
-    const badge = document.querySelector('.notification-badge');
-    const countSpan = document.querySelector('.notification-count');
-    
-    // Add click handlers to notification items
-    notificationItems.forEach(function(item) {
+    // Dropdown toggle
+    const trigger = document.getElementById('notificationDropdown');
+    const dropdownMenu = document.getElementById('notificationDropdownMenu');
+    if (trigger && dropdownMenu) {
+        trigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            dropdownMenu.classList.toggle('show');
+        });
+        document.addEventListener('click', function(e) {
+            if (!dropdownMenu.contains(e.target) && !trigger.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    }
+
+    // Handler for notification items
+    function handleNotificationClick(item) {
         item.addEventListener('click', function(e) {
             e.preventDefault();
-            
             const notificationId = this.getAttribute('data-id');
             const url = `/notifications/${notificationId}/read`;
             const targetUrl = this.getAttribute('href');
-            
-            // Add loading state
             this.classList.add('loading');
-            
-            // Mark notification as read
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -356,56 +362,43 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    // Update UI
-                    updateNotificationCount();
-                    this.style.opacity = '0.5';
-                    this.querySelector('.unread-dot').style.display = 'none';
-                    
-                    // Navigate after a short delay
-                    setTimeout(() => {
-                        if (targetUrl && targetUrl !== '#') {
-                            window.location.href = targetUrl;
-                        }
-                    }, 300);
-                } else {
-                    // Navigate anyway if marking as read fails
-                    if (targetUrl && targetUrl !== '#') {
-                        window.location.href = targetUrl;
-                    }
-                }
+                updateNotificationCount();
+                this.style.opacity = '0.5';
+                const dot = this.querySelector('.unread-dot');
+                if (dot) dot.style.display = 'none';
+                setTimeout(() => {
+                    if (targetUrl && targetUrl !== '#') window.location.href = targetUrl;
+                }, 200);
             })
-            .catch(error => {
-                console.error('Error marking notification as read:', error);
-                // Navigate anyway on error
-                if (targetUrl && targetUrl !== '#') {
-                    window.location.href = targetUrl;
-                }
+            .catch(() => {
+                if (targetUrl && targetUrl !== '#') window.location.href = targetUrl;
             })
             .finally(() => {
                 this.classList.remove('loading');
             });
         });
-    });
-    
-    // Function to update notification count
+    }
+    document.querySelectorAll('#notificationDropdownMenu .notification-item').forEach(handleNotificationClick);
+
+    // Update notification count and badge
     function updateNotificationCount() {
-        let currentCount = parseInt(countSpan.textContent) || 0;
+        const badge = document.querySelector('.notification-badge');
+        const countSpan = document.querySelector('.notification-count');
+        let currentCount = parseInt(countSpan?.textContent) || 0;
         currentCount = Math.max(0, currentCount - 1);
-        
-        countSpan.textContent = currentCount;
-        
+        if (countSpan) countSpan.textContent = currentCount;
         if (badge) {
             if (currentCount === 0) {
                 badge.style.display = 'none';
                 badge.classList.remove('pulse');
             } else {
                 badge.textContent = currentCount > 99 ? '99+' : currentCount;
+                badge.style.display = 'inline-block';
             }
         }
     }
-    
-    // Auto-refresh notifications every 30 seconds
+
+    // Auto-refresh notification count every 30s
     setInterval(function() {
         fetch('/notifications/count', {
             method: 'GET',
@@ -416,32 +409,19 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
+            const badge = document.querySelector('.notification-badge');
+            const countSpan = document.querySelector('.notification-count');
             if (data.count !== undefined) {
-                const currentCount = parseInt(countSpan.textContent) || 0;
-                if (data.count > currentCount) {
-                    // New notifications arrived
-                    countSpan.textContent = data.count;
-                    if (badge) {
-                        badge.textContent = data.count > 99 ? '99+' : data.count;
-                        badge.style.display = 'inline-block';
-                        badge.classList.add('pulse');
-                    }
+                if (countSpan) countSpan.textContent = data.count;
+                if (badge) {
+                    badge.textContent = data.count > 99 ? '99+' : data.count;
+                    badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                    if (data.count > 0) badge.classList.add('pulse');
+                    else badge.classList.remove('pulse');
                 }
             }
-        })
-        .catch(error => console.error('Error checking notifications:', error));
+        });
     }, 30000);
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        const dropdown = document.querySelector('.notification-dropdown');
-        if (!dropdown.contains(e.target)) {
-            const dropdownMenu = document.querySelector('#notificationDropdownMenu');
-            if (dropdownMenu.classList.contains('show')) {
-                dropdownMenu.classList.remove('show');
-            }
-        }
-    });
 });
 </script>
 @endpush

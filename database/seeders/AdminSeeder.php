@@ -32,7 +32,7 @@ class AdminSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Koordinator',
+                'name' => 'Koordinator',    
                 'email' => 'koordinator@gmail.com',
                 'password' => Hash::make('koordinator123'),
                 'role' => 'koordinator',
